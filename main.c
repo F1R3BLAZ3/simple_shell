@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-	char *prompt = "$ ";
+	char *prompt = "hsh: $ ";
 	char *buf;
 	size_t n = 0;
 	(void)argc;
