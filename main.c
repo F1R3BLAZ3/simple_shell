@@ -8,10 +8,21 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
-	printf("%s", prompt);
-	getline(&buf, &n, stdin);
-	printf("%s\n", buf);
+	/* create an infinite loop */
+	while (1)
+	{
+		printf("%s", prompt);
+		val = getline(&buf, &n, stdin);
+		if (val == -1)
+		{
+			printf("Exiting shell...\n");
+			return (-1);
+		}
 
-	free(buf);
+		printf("%s\n", buf);
+
+		free(buf);
+	}
+
 	return (0);
 }
