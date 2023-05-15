@@ -129,7 +129,7 @@ void execute_command(char **tokens)
 			dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
 			sprintf(dir, "%s/%s", token, tokens[0]);
 
-			if (access(dir, X_OK) == -1)
+			if (access(dir, F_OK | X_OK) == -1)
 			{
 				execve(dir, tokens, environ);
 				perror("execve");
