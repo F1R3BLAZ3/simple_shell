@@ -1,4 +1,5 @@
 #include "main.h"
+#define PATH_SEPARATOR " \n"
 
 /**
  * main - Simple shell program
@@ -26,7 +27,7 @@ int main(int argc, char **argv)
 	char **tokens;
 	size_t n = 0;
 	ssize_t val;
-	char *buf = malloc(sizeof(char) * n);
+	char buf[BUFSIZE];
 	(void)argc;
 	(void)argv;
 
@@ -68,7 +69,6 @@ int main(int argc, char **argv)
  */
 char **tokenize(char *input)
 {
-	#define PATH_SEPARATOR " \n"
 	char **tokens = malloc(BUFSIZE * sizeof(char *));
 	char *token;
 	int i;
