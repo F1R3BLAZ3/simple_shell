@@ -11,5 +11,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
+
+char **tokenize(char *input);
+void execute_command(char **tokens);
 
 #endif /* MAIN_H */

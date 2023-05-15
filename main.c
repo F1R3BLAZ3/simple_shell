@@ -24,10 +24,10 @@
 int main(int argc, char **argv)
 {
 	char *prompt = "hsh: $ ";
-	char *buf[BUFSIZE];
 	char **tokens;
 	size_t n = 0;
 	ssize_t val;
+        char *buf = malloc(sizeof(char) * n);
 	(void)argc;
 	(void)argv;
 
@@ -76,7 +76,7 @@ char **tokenize(char *input)
 	if (!tokens)
 	{
 		perror("Memory allocation error");
-		return (-1);
+		exit(EXIT_FAILURE);
 	}
 
 	token = strtok(input, " \n");
@@ -110,7 +110,7 @@ void execute_command(char **tokens)
 {
 	pid_t pid;
 
-	if (access(tokens[0], F_OK) == -1)
+	if (access(tokens[0], X_OK) == -1)
 	{
 		printf("%s : command not found\n", tokens[0]);
 		return;
@@ -124,7 +124,7 @@ void execute_command(char **tokens)
 	}
 	else if (pid == 0)
 	{
-		if (execv(tokens[0], tokens) == -1)
+		if (execve(tokens[0], tokens, environ) == -1)
 		{
 			perror("Error");
 		}
