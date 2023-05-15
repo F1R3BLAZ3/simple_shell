@@ -3,16 +3,16 @@
 int main(int argc, char **argv)
 {
 	char *prompt = "hsh: $ ";
-	char *buf;
-	*buf_copy;
+	char *buf[BUFSIZE];
+	char **tokens;
 	size_t n = 0;
 	ssize_t val;
 	(void)argc;
 	(void)argv;
-	const char *delim = " \n"
 
-	    /* create an infinite loop */
-	    while (1)
+
+	/* create an infinite loop */
+	while (1)
 	{
 		printf("%s", prompt);
 		val = getline(&buf, &n, stdin);
@@ -22,17 +22,43 @@ int main(int argc, char **argv)
 			return (-1);
 		}
 
-		printf("%s\n", buf);
+		tokens = tokenize(buf);
+		if(tokens[0] == NULL)
+			continue;
 
-		buf_copy = malloc(sizeof(char) * val);
-		if (buf_copy == NULL)
-		{
-			perror("hsh: memory allocation error");
-			return (-1);
+		if (access(tokens[0], F_OK) == -1){
+			printf("%s : command not found\n", tokens[0]);
+			continue;
 		}
 
-		free(buf);
+		execute_command(tokens);
+
+		free(tokens);
+	}
+	return (0);
+}
+
+/**/
+
+char **tokenize(char *input){
+	char **tokens = malloc(BUFSIZE * sizeof(char*));
+	char *token;
+	int i;
+
+	i = 0;
+	if (!tokens){
+		perror("Memory allocation error");
+		return (-1);
 	}
 
-	return (0);
+	token = strtok(input, " \n");
+	while (token != NULL)
+	{
+		tokens[i] = token;
+		i++;
+		token = strtok(NULL, " \n");
+	}
+
+	tokens[i] = NULL;
+	return (tokens);
 }
