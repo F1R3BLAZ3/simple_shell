@@ -10,7 +10,6 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
-
 	/* create an infinite loop */
 	while (1)
 	{
@@ -23,13 +22,8 @@ int main(int argc, char **argv)
 		}
 
 		tokens = tokenize(buf);
-		if(tokens[0] == NULL)
+		if (tokens[0] == NULL)
 			continue;
-
-		if (access(tokens[0], F_OK) == -1){
-			printf("%s : command not found\n", tokens[0]);
-			continue;
-		}
 
 		execute_command(tokens);
 
@@ -40,13 +34,15 @@ int main(int argc, char **argv)
 
 /**/
 
-char **tokenize(char *input){
-	char **tokens = malloc(BUFSIZE * sizeof(char*));
+char **tokenize(char *input)
+{
+	char **tokens = malloc(BUFSIZE * sizeof(char *));
 	char *token;
 	int i;
 
 	i = 0;
-	if (!tokens){
+	if (!tokens)
+	{
 		perror("Memory allocation error");
 		return (-1);
 	}
@@ -61,4 +57,31 @@ char **tokenize(char *input){
 
 	tokens[i] = NULL;
 	return (tokens);
+}
+
+void execute_command(char **tokens)
+{
+	pid_t pid;
+
+	if (access(tokens[0], F_OK) == -1)
+	{
+		printf("%s : command not found\n", tokens[0]);
+		return;
+	}
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("Error");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		if(execv(tokens[0], tokens) == -1){
+			perror("Error");
+		}
+	}
+	else {
+		wait(NULL);
+	}
 }
