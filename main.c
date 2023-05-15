@@ -1,33 +1,32 @@
 #include "main.h"
 
-
 /**
-  * main - Simple shell program
-  * @argc: Number of arguments passed to the program
-  * @argv: Array of strings representing the arguments passed to the program
-  *
-  * Description: This function is the entry point for a simple shell program.
-  * It creates an infinite loop that prompts the user for input
-  * and executes commands entered by the user. The loop continues until
-  * the user exits the shell by typing 'exit' or by pressing Ctrl-D.
-  * The function prints a prompt 'hsh: $ ' to the standard output,
-  * reads a line of input from the user using the getline function,
-  * and tokenizes the input using the tokenize function.
-  * If the first token (command) is 'exit', the function returns.
-  * If the first token is NULL, the function continues to the next iteration of
-  * the loop. Otherwise, the function executes the command using the
-  * execute_command function. The function then frees the memory used
-  * by the tokens array and repeats the loop.
-  *
-  * Return: This function returns 0 if the program exits successfully.
-  */
+ * main - Simple shell program
+ * @argc: Number of arguments passed to the program
+ * @argv: Array of strings representing the arguments passed to the program
+ *
+ * Description: This function is the entry point for a simple shell program.
+ * It creates an infinite loop that prompts the user for input
+ * and executes commands entered by the user. The loop continues until
+ * the user exits the shell by typing 'exit' or by pressing Ctrl-D.
+ * The function prints a prompt 'hsh: $ ' to the standard output,
+ * reads a line of input from the user using the getline function,
+ * and tokenizes the input using the tokenize function.
+ * If the first token (command) is 'exit', the function returns.
+ * If the first token is NULL, the function continues to the next iteration of
+ * the loop. Otherwise, the function executes the command using the
+ * execute_command function. The function then frees the memory used
+ * by the tokens array and repeats the loop.
+ *
+ * Return: This function returns 0 if the program exits successfully.
+ */
 int main(int argc, char **argv)
 {
 	char *prompt = "hsh: $ ";
 	char **tokens;
 	size_t n = 0;
 	ssize_t val;
-        char *buf = malloc(sizeof(char) * n);
+	char *buf = malloc(sizeof(char) * n);
 	(void)argc;
 	(void)argv;
 
@@ -109,6 +108,7 @@ char **tokenize(char *input)
 void execute_command(char **tokens)
 {
 	pid_t pid;
+	char *actual_command;
 
 	if (access(tokens[0], X_OK) == -1)
 	{
@@ -116,6 +116,7 @@ void execute_command(char **tokens)
 		return;
 	}
 
+	actual_command = get_location(tokens[0]);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -124,7 +125,7 @@ void execute_command(char **tokens)
 	}
 	else if (pid == 0)
 	{
-		if (execve(tokens[0], tokens, environ) == -1)
+		if (execve(actual_command, tokens, environ) == -1)
 		{
 			perror("Error");
 		}
@@ -133,4 +134,51 @@ void execute_command(char **tokens)
 	{
 		wait(NULL);
 	}
+}
+
+char *get_location(char *command)
+{
+	char *path, *path_copy, *path_token, *file_path;
+	int cmd_len, dir_len;
+	struct stat buf;
+
+	path = getenv("PATH");
+	if (path)
+	{
+		path_copy = strdup(path);
+		cmd_len = strlen(command);
+
+		path_token = strtok(path_copy, ":");
+
+		while (path_token != NULL)
+		{
+			dir_len = strlen(path_token);
+
+			file_path = malloc(cmd_len + dir_len + 2);
+
+			strcpy(file_path, path_token);
+			strcat(file_path, "/");
+			strcat(file_path, command);
+			strcat(file_path, "\0");
+
+			if (stat(file_path, &buf) == 0)
+			{
+				free(path_copy);
+				return (file_path);
+			}
+			else
+			{
+				free(file_path);
+				path_token = strtok(NULL, ":");
+			}
+		}
+		free(path_copy);
+
+		if (stat(command, &buf) == 0)
+		{
+			return (command);
+		}
+		return (NULL);
+	}
+	return(NULL);
 }
