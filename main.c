@@ -5,16 +5,20 @@
   * main - Simple shell program
   * @argc: Number of arguments passed to the program
   * @argv: Array of strings representing the arguments passed to the program
-  * 
-  * Description: This function is the entry point for a simple shell program. It creates an infinite loop that
-  * prompts the user for input and executes commands entered by the user. The loop continues until
-  * the user exits the shell by typing 'exit' or by pressing Ctrl-D. The function prints a prompt
-  * 'hsh: $ ' to the standard output, reads a line of input from the user using the getline function,
-  * and tokenizes the input using the tokenize function. If the first token (command) is 'exit', the
-  * function returns. If the first token is NULL, the function continues to the next iteration of the
-  * loop. Otherwise, the function executes the command using the execute_command function. The function
-  * then frees the memory used by the tokens array and repeats the loop.
-  * 
+  *
+  * Description: This function is the entry point for a simple shell program.
+  * It creates an infinite loop that prompts the user for input
+  * and executes commands entered by the user. The loop continues until
+  * the user exits the shell by typing 'exit' or by pressing Ctrl-D.
+  * The function prints a prompt 'hsh: $ ' to the standard output,
+  * reads a line of input from the user using the getline function,
+  * and tokenizes the input using the tokenize function.
+  * If the first token (command) is 'exit', the function returns.
+  * If the first token is NULL, the function continues to the next iteration of
+  * the loop. Otherwise, the function executes the command using the
+  * execute_command function. The function then frees the memory used
+  * by the tokens array and repeats the loop.
+  *
   * Return: This function returns 0 if the program exits successfully.
   */
 int main(int argc, char **argv)
@@ -53,13 +57,14 @@ int main(int argc, char **argv)
  * tokenize - Split a string into tokens
  * @input: The string to be tokenized
  *
- * Description: This function receives a string and splits it into tokens based on
- * the delimiters " " and "\n". It uses the strtok function to do the tokenization
- * and stores the tokens in a dynamically allocated array of strings. The tokens are
- * separated by NULL. The function returns a pointer to the array of strings.
+ * Description: This function receives a string and splits it into tokens based
+ * on the delimiters " " and "\n". It uses the strtok function to do the
+ * tokenization and stores the tokens in a dynamically allocated
+ * array of strings. The tokens are separated by NULL.
+ * The function returns a pointer to the array of strings.
  *
- * Return: A pointer to a dynamically allocated array of strings (tokens). If there
- * is a memory allocation error, the function returns NULL.
+ * Return: A pointer to a dynamically allocated array of strings (tokens).
+ * If there is a memory allocation error, the function returns NULL.
  */
 char **tokenize(char *input)
 {
@@ -88,13 +93,16 @@ char **tokenize(char *input)
 
 /**
  * execute_command - Execute a command in a new process
- * @tokens: A pointer to an array of strings (tokens) representing the command and its arguments
+ * @tokens: A pointer to an array of strings (tokens)
+ * representing the command and its arguments
  *
- * Description: This function receives an array of strings representing a command and its arguments,
- * checks if the command exists, and executes it in a new process using the execv system call. If
- * the command does not exist, the function prints an error message and returns. If there is an
- * error in forking a new process or executing the command, the function prints an error message
- * and exits. The function waits for the child process to complete before returning.
+ * Description: This function receives an array of strings representing
+ * a command and its arguments, checks if the command exists,
+ * and executes it in a new process using the execv system call.
+ * If the command does not exist, the function prints an error message and
+ * returns. If there is an error in forking a new process or executing the
+ * command, the function prints an error message and exits.
+ * The function waits for the child process to complete before returning.
  *
  * Return: This function does not return a value.
  */
