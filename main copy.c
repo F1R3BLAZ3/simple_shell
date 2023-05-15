@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		printf("%s", prompt);
-		fflush(stdout);
+                fflush(stdout);
 		val = getline(&buf, &(size_t){0}, stdin);
 		if (val == -1)
 		{
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 		}
 
 		tokens = tokenize(buf);
-		/*if (tokens[0] == NULL)
-			continue;*/
+		if (tokens[0] == NULL)
+			continue;
 
 		execute_command(tokens);
 
@@ -108,49 +108,43 @@ char **tokenize(char *input)
  */
 void execute_command(char **tokens)
 {
-	#undef PATH_SEPARATOR
-	#define PATH_SEPARATOR ":"
 	pid_t pid;
-	char *dir, *token;
-	char *path = getenv("PATH");
-	int status;
+	char *actual_command;
 
+	if (access(tokens[0], X_OK) == -1)
+	{
+		printf("%s : command not found\n", tokens[0]);
+		return;
+	}
+
+	actual_command = get_location(tokens[0]);
 	pid = fork();
-	if (pid == -1)
+	if (pid == -1)  
 	{
 		perror("Error");
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)
 	{
-		token = strtok(path, PATH_SEPARATOR);
-		while (token != NULL)
+		if (execve(actual_command, tokens, environ) == -1)
 		{
-			dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
-			sprintf(dir, "%s/%s", token, tokens[0]);
-
-			if (access(dir, X_OK) == -1)
-			{
-				execve(dir, tokens, environ);
-				perror("execve");
-				exit(EXIT_FAILURE);
-			}
-			free(dir);
-			token = strtok(NULL, PATH_SEPARATOR);
+			perror("Error");
 		}
-		printf("%s: command not found\n", tokens[0]);
-		exit(EXIT_FAILURE);
+		else
+		{
+			execve(actual_command, tokens, environ);
+		}
 	}
 	else
 	{
-		waitpid(pid, &status, 0);
+		wait(NULL);
 	}
 }
 
-/*char *get_location(char *command)
+char *get_location(char *command)
 {
-#undef PATH_SEPARATOR
-#define PATH_SEPARATOR ":"
+	#undef PATH_SEPARATOR
+	#define PATH_SEPARATOR ":"
 	char *path, *path_copy, *path_token, *file_path;
 	int cmd_len, dir_len;
 	struct stat buf;
@@ -201,6 +195,5 @@ void execute_command(char **tokens)
 		}
 		return (NULL);
 	}
-	return (NULL);
+	return(NULL);
 }
-*/
