@@ -67,6 +67,7 @@ int main(int argc, char **argv)
  */
 char **tokenize(char *input)
 {
+	#define PATH_SEPARATOR " \n"
 	char **tokens = malloc(BUFSIZE * sizeof(char *));
 	char *token;
 	int i;
@@ -83,7 +84,7 @@ char **tokenize(char *input)
 	{
 		tokens[i] = token;
 		i++;
-		token = strtok(NULL, " \n");
+		token = strtok(NULL, PATH_SEPARATOR);
 	}
 
 	tokens[i] = NULL;
@@ -129,6 +130,10 @@ void execute_command(char **tokens)
 		{
 			perror("Error");
 		}
+		else
+		{
+			execve(actual_command, tokens, environ);
+		}
 	}
 	else
 	{
@@ -138,28 +143,38 @@ void execute_command(char **tokens)
 
 char *get_location(char *command)
 {
+	#undef PATH_SEPARATOR
+	#define PATH_SEPARATOR ":"
 	char *path, *path_copy, *path_token, *file_path;
 	int cmd_len, dir_len;
 	struct stat buf;
 
 	path = getenv("PATH");
+	if (path == NULL)
+		return (NULL);
+
 	if (path)
 	{
 		path_copy = strdup(path);
+		if (path_copy == NULL)
+			return (NULL);
+
 		cmd_len = strlen(command);
 
-		path_token = strtok(path_copy, ":");
+		path_token = strtok(path_copy, PATH_SEPARATOR);
 
 		while (path_token != NULL)
 		{
 			dir_len = strlen(path_token);
 
 			file_path = malloc(cmd_len + dir_len + 2);
+			if (file_path == NULL)
+			{
+				free(path_copy);
+				return (NULL);
+			}
 
-			strcpy(file_path, path_token);
-			strcat(file_path, "/");
-			strcat(file_path, command);
-			strcat(file_path, "\0");
+			snprintf(file_path, cmd_len + dir_len + 2, "%s/%s", path_token, command);
 
 			if (stat(file_path, &buf) == 0)
 			{
@@ -169,7 +184,7 @@ char *get_location(char *command)
 			else
 			{
 				free(file_path);
-				path_token = strtok(NULL, ":");
+				path_token = strtok(NULL, PATH_SEPARATOR);
 			}
 		}
 		free(path_copy);
