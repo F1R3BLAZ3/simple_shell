@@ -83,11 +83,13 @@ char **tokenize(char *input)
 	while (token != NULL)
 	{
 		tokens[i] = token;
+		printf("Token: %s\n", token); /* Debug print statement */
 		i++;
 		token = strtok(NULL, PATH_SEPARATOR);
 	}
 
 	tokens[i] = NULL;
+	printf("Tokenization completed.\n"); /* Debug print statement */
 	return (tokens);
 }
 
@@ -108,8 +110,8 @@ char **tokenize(char *input)
  */
 void execute_command(char **tokens)
 {
-	#undef PATH_SEPARATOR
-	#define PATH_SEPARATOR ":"
+#undef PATH_SEPARATOR
+#define PATH_SEPARATOR "\n:"
 	pid_t pid;
 	char *dir, *token;
 	char *path = getenv("PATH");
@@ -123,22 +125,27 @@ void execute_command(char **tokens)
 	}
 	else if (pid == 0)
 	{
-		token = strtok(path, PATH_SEPARATOR);
+		char *reversed_path = strdup(path);
+		char *token_end = reversed_path + strlen(reversed_path) - 1;
+		token = strtok_r(reversed_path, PATH_SEPARATOR, &token_end);
 		while (token != NULL)
 		{
 			dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
 			sprintf(dir, "%s/%s", token, tokens[0]);
 
-			if (access(dir, F_OK | X_OK) == -1)
+			if (access(dir, F_OK | X_OK) == 0)
 			{
+				printf("Executing command: %s\n", tokens[0]);
 				execve(dir, tokens, environ);
 				perror("execve");
 				exit(EXIT_FAILURE);
 			}
+
 			free(dir);
-			token = strtok(NULL, PATH_SEPARATOR);
+			token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
 		}
-		printf("%s: command not found\n", tokens[0]);
+
+		printf("Command not found in any directory\n"); /* Debug print statement */
 		exit(EXIT_FAILURE);
 	}
 	else
