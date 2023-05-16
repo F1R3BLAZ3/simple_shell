@@ -79,7 +79,7 @@ char **tokenize(char *input)
 		exit(EXIT_FAILURE);
 	}
 
-	token = strtok(input, " \n");
+	token = strtok(input, PATH_SEPARATOR);
 	while (token != NULL)
 	{
 		tokens[i] = token;
