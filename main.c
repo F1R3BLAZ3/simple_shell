@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 		val = getline(&buf, &(size_t){0}, stdin);
 		if (val == -1)
 		{
-			perror("Exiting shell..");
+			printf("Exiting shell..\n");
 			return (-1);
 		}
 		tokens = tokenize(buf);
@@ -55,6 +55,11 @@ int main(int argc, char **argv)
 			execute_exit();
 		else
 			execute_command(tokens);
+		if (strcmp(tokens[0], "env") == 0)
+		{
+			execute_env();
+			continue;
+		}
 		free(tokens);
 	}
 	free(buf);
