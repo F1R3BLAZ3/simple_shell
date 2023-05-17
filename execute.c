@@ -21,8 +21,15 @@
 
 void execute_command(char **tokens)
 {
-	char *dir, *token, *path = getenv("PATH");
+	char *path = search_path(tokens);
 	int status;
+
+	if (path == NULL)
+	{
+		printf("Command not found: %s\n", tokens[0]);
+		return;
+	}
+	
 	pid_t pid = fork();
 
 	if (pid == -1)
@@ -32,11 +39,26 @@ void execute_command(char **tokens)
 	}
 	else if (pid == 0)
 	{
-		char *reversed_path = strdup(path);
-		char *token_end = reversed_path + strlen(reversed_path) - 1;
+				execve(dir, tokens, environ);
+				perror("execve");
+				exit(EXIT_FAILURE);
+			}
+		}
+		perror("Command not found");
+		exit(EXIT_FAILURE);
+	}
+	else
+		waitpid(pid, &status, 0);
+}
 
-		token = strtok_r(reversed_path, PATH_SEPARATOR, &token_end);
-		while (token != NULL)
+char *search_path(char **tokens)
+{
+	char *dir, *token, *path = getenv("PATH");
+	char *reversed_path = strdup(path);
+	char *token_end = reversed_path + strlen(reversed_path) - 1;
+
+	token = strtok_r(reversed_path, PATH_SEPARATOR, &token_end);
+	while (token != NULL)
 		{
 			dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
 			if (!dir)
@@ -48,16 +70,10 @@ void execute_command(char **tokens)
 			sprintf(dir, "%s/%s", token, tokens[0]);
 			if (access(dir, F_OK | X_OK) == 0)
 			{
-				execve(dir, tokens, environ);
-				perror("execve");
-				exit(EXIT_FAILURE);
+				free(reversed_path);
+				return(dir);
 			}
 			free(dir);
 			token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
-		}
-		perror("Command not found");
-		exit(EXIT_FAILURE);
-	}
-	else
-		waitpid(pid, &status, 0);
+
 }
