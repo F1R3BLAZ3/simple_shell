@@ -24,14 +24,12 @@
  */
 int main(int argc, char **argv)
 {
-	char *prompt = "hsh: $ ";
+	char *buf, *prompt = "hsh: $ ";
 	char **tokens;
 	ssize_t val;
-	char *buf;
 	(void)argc;
 	(void)argv;
 
-	/* create an infinite loop */
 	while (1)
 	{
 		printf("%s", prompt);
