@@ -49,8 +49,16 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		execute_command(tokens);
+		if (strcmp(tokens[0], "echo") == 0 && strcmp(tokens[1], "$PATH") == 0)
+		{
+			char *path = getenv("PATH");
 
+			printf("%s\n", path);
+			free(tokens);
+			continue;
+		}
+
+		execute_command(tokens);
 		free(tokens);
 	}
 	free(buf);
