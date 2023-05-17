@@ -110,11 +110,10 @@ char **tokenize(char *input)
  *
  * Return: This function does not return a value.
  */
-#undef PATH_SEPARATOR
-#define PATH_SEPARATOR "\n:"
-
 void execute_command(char **tokens)
 {
+#undef PATH_SEPARATOR
+#define PATH_SEPARATOR "\n:"
 	char *dir, *token, *path = getenv("PATH");
 	int status;
 	pid_t pid = fork();
@@ -146,7 +145,6 @@ void execute_command(char **tokens)
 				perror("execve");
 				exit(EXIT_FAILURE);
 			}
-
 			free(dir);
 			token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
 		}
