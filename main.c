@@ -38,11 +38,7 @@ int main(int argc, char **argv)
 		fflush(stdout);
 		val = getline(&buf, &(size_t){0}, stdin);
 		if (val == -1)
-		{
-			printf("Exiting shell...\n");
 			return (-1);
-		}
-
 		tokens = tokenize(buf);
 		if (tokens[0] == NULL)
 		{
@@ -59,6 +55,8 @@ int main(int argc, char **argv)
 			continue;
 		}
 
+		if (strcmp(tokens[0], "exit") == 0)
+			exit(0);
 		execute_command(tokens);
 		free(tokens);
 	}
