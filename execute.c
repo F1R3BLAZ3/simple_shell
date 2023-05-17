@@ -29,7 +29,7 @@ void execute_command(char **tokens)
 		printf("Command not found: %s\n", tokens[0]);
 		return;
 	}
-	
+
 	pid_t pid = fork();
 
 	if (pid == -1)
@@ -39,12 +39,8 @@ void execute_command(char **tokens)
 	}
 	else if (pid == 0)
 	{
-				execve(dir, tokens, environ);
-				perror("execve");
-				exit(EXIT_FAILURE);
-			}
-		}
-		perror("Command not found");
+		execve(dir, tokens, environ);
+		perror("execve");
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -59,21 +55,20 @@ char *search_path(char **tokens)
 
 	token = strtok_r(reversed_path, PATH_SEPARATOR, &token_end);
 	while (token != NULL)
+	{
+		dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
+		if (!dir)
 		{
-			dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
-			if (!dir)
-			{
-				perror("Memory allocation error");
-				free(dir);
-				exit(EXIT_FAILURE);
-			}
-			sprintf(dir, "%s/%s", token, tokens[0]);
-			if (access(dir, F_OK | X_OK) == 0)
-			{
-				free(reversed_path);
-				return(dir);
-			}
+			perror("Memory allocation error");
 			free(dir);
-			token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
-
-}
+			exit(EXIT_FAILURE);
+		}
+		sprintf(dir, "%s/%s", token, tokens[0]);
+		if (access(dir, F_OK | X_OK) == 0)
+		{
+			free(reversed_path);
+			return (dir);
+		}
+		free(dir);
+		token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
+	}
