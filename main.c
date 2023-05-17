@@ -1,5 +1,5 @@
 #include "main.h"
-#define PATH_SEPARATOR " \n"
+#define PATH_SEPARATOR " \t\r\n"
 
 /**
  * main - Simple shell program
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
 		execute_command(tokens);
 
-		free_tokens(tokens);
+		free(tokens);
 	}
 	free(buf);
 	return (0);
@@ -87,13 +87,11 @@ char **tokenize(char *input)
 	while (token != NULL)
 	{
 		tokens[i] = token;
-		printf("Token: %s\n", token); /* Debug print statement */
 		i++;
 		token = strtok(NULL, PATH_SEPARATOR);
 	}
 
 	tokens[i] = NULL;
-	printf("Tokenization completed.\n"); /* Debug print statement */
 	return (tokens);
 }
 
@@ -116,12 +114,10 @@ void execute_command(char **tokens)
 {
 #undef PATH_SEPARATOR
 #define PATH_SEPARATOR "\n:"
-	pid_t pid;
-	char *dir, *token;
-	char *path = getenv("PATH");
+	char *dir, *token, *path = getenv("PATH");
 	int status;
+	pid_t pid = fork();
 
-	pid = fork();
 	if (pid == -1)
 	{
 		perror("Error");
@@ -131,6 +127,7 @@ void execute_command(char **tokens)
 	{
 		char *reversed_path = strdup(path);
 		char *token_end = reversed_path + strlen(reversed_path) - 1;
+
 		token = strtok_r(reversed_path, PATH_SEPARATOR, &token_end);
 		while (token != NULL)
 		{
@@ -141,10 +138,8 @@ void execute_command(char **tokens)
 				exit(EXIT_FAILURE);
 			}
 			sprintf(dir, "%s/%s", token, tokens[0]);
-
 			if (access(dir, F_OK | X_OK) == 0)
 			{
-				printf("Executing command: %s\n", tokens[0]);
 				execve(dir, tokens, environ);
 				perror("execve");
 				exit(EXIT_FAILURE);
@@ -153,90 +148,8 @@ void execute_command(char **tokens)
 			free(dir);
 			token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
 		}
-
-		printf("Command not found in any directory\n"); /* Debug print statement */
 		exit(EXIT_FAILURE);
 	}
 	else
-	{
 		waitpid(pid, &status, 0);
-	}
 }
-
-/**
- * free_tokens - Free the dynamically allocated tokens array
- * @tokens: A pointer to the tokens array
- *
- * Description: This function frees the memory used by the tokens array.
- * It iterates through the array and frees each individual token,
- * and then frees the array itself.
- *
- * Return: This function does not return a value.
- */
-void free_tokens(char **tokens)
-{
-	int i;
-
-	for (i = 0; tokens[i] != NULL; i++)
-		free(tokens[i]);
-
-	free(tokens);
-}
-
-/*char *get_location(char *command)
-{
-#undef PATH_SEPARATOR
-#define PATH_SEPARATOR ":"
-	char *path, *path_copy, *path_token, *file_path;
-	int cmd_len, dir_len;
-	struct stat buf;
-
-	path = getenv("PATH");
-	if (path == NULL)
-		return (NULL);
-
-	if (path)
-	{
-		path_copy = strdup(path);
-		if (path_copy == NULL)
-			return (NULL);
-
-		cmd_len = strlen(command);
-
-		path_token = strtok(path_copy, PATH_SEPARATOR);
-
-		while (path_token != NULL)
-		{
-			dir_len = strlen(path_token);
-
-			file_path = malloc(cmd_len + dir_len + 2);
-			if (file_path == NULL)
-			{
-				free(path_copy);
-				return (NULL);
-			}
-
-			snprintf(file_path, cmd_len + dir_len + 2, "%s/%s", path_token, command);
-
-			if (stat(file_path, &buf) == 0)
-			{
-				free(path_copy);
-				return (file_path);
-			}
-			else
-			{
-				free(file_path);
-				path_token = strtok(NULL, PATH_SEPARATOR);
-			}
-		}
-		free(path_copy);
-
-		if (stat(command, &buf) == 0)
-		{
-			return (command);
-		}
-		return (NULL);
-	}
-	return (NULL);
-}
-*/

@@ -15,6 +15,5 @@
 
 char **tokenize(char *input);
 void execute_command(char **tokens);
-void free_tokens(char **tokens);
 
 #endif /* MAIN_H */
