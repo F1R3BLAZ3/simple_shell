@@ -110,10 +110,11 @@ char **tokenize(char *input)
  *
  * Return: This function does not return a value.
  */
-void execute_command(char **tokens)
-{
 #undef PATH_SEPARATOR
 #define PATH_SEPARATOR "\n:"
+
+void execute_command(char **tokens)
+{
 	char *dir, *token, *path = getenv("PATH");
 	int status;
 	pid_t pid = fork();
@@ -135,6 +136,7 @@ void execute_command(char **tokens)
 			if (!dir)
 			{
 				perror("Memory allocation error");
+				free(dir);
 				exit(EXIT_FAILURE);
 			}
 			sprintf(dir, "%s/%s", token, tokens[0]);
