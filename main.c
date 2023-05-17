@@ -43,13 +43,17 @@ int main(int argc, char **argv)
 		}
 
 		tokens = tokenize(buf);
-		/*if (tokens[0] == NULL)
-			continue;*/
+		if (tokens[0] == NULL)
+		{
+			free(tokens);
+			continue;
+		}
 
 		execute_command(tokens);
 
 		free(tokens);
 	}
+	free(buf);
 	return (0);
 }
 
@@ -131,6 +135,11 @@ void execute_command(char **tokens)
 		while (token != NULL)
 		{
 			dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
+			if (!dir)
+			{
+				perror("Memory allocation error");
+				exit(EXIT_FAILURE);
+			}
 			sprintf(dir, "%s/%s", token, tokens[0]);
 
 			if (access(dir, F_OK | X_OK) == 0)
