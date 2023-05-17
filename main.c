@@ -38,7 +38,10 @@ int main(int argc, char **argv)
 		fflush(stdout);
 		val = getline(&buf, &(size_t){0}, stdin);
 		if (val == -1)
+		{
+			perror("Exiting shell..");
 			return (-1);
+		}
 		tokens = tokenize(buf);
 		if (tokens[0] == NULL)
 		{
@@ -47,17 +50,11 @@ int main(int argc, char **argv)
 		}
 
 		if (strcmp(tokens[0], "echo") == 0 && strcmp(tokens[1], "$PATH") == 0)
-		{
-			char *path = getenv("PATH");
-
-			printf("%s\n", path);
-			free(tokens);
-			continue;
-		}
-
-		if (strcmp(tokens[0], "exit") == 0)
-			exit(0);
-		execute_command(tokens);
+			execute_echo_path();
+		else if (strcmp(tokens[0], "exit") == 0)
+			execute_exit();
+		else
+			execute_command(tokens);
 		free(tokens);
 	}
 	free(buf);

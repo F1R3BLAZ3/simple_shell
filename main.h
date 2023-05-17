@@ -16,5 +16,7 @@
 char **tokenize(char *input);
 void execute_command(char **tokens);
 char *search_path(char **tokens);
+void execute_exit(void);
+void execute_echo_path(void);
 
 #endif /* MAIN_H */
