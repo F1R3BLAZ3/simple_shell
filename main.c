@@ -55,11 +55,6 @@ int main(int argc, char **argv)
 			execute_exit();
 		else
 			execute_command(tokens);
-		if (strcmp(tokens[0], "env") == 0)
-		{
-			execute_env();
-			continue;
-		}
 		free(tokens);
 	}
 	free(buf);
