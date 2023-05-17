@@ -39,7 +39,7 @@ void execute_command(char **tokens)
 	}
 	else if (pid == 0)
 	{
-		execve(dir, tokens, environ);
+		execve(path, tokens, environ);
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
@@ -72,3 +72,5 @@ char *search_path(char **tokens)
 		free(dir);
 		token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
 	}
+	return (NULL);
+}
