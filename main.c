@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
 		execute_command(tokens);
 
-		free(tokens);
+		free_tokens(tokens);
 	}
 	free(buf);
 	return (0);
@@ -161,6 +161,26 @@ void execute_command(char **tokens)
 	{
 		waitpid(pid, &status, 0);
 	}
+}
+
+/**
+ * free_tokens - Free the dynamically allocated tokens array
+ * @tokens: A pointer to the tokens array
+ *
+ * Description: This function frees the memory used by the tokens array.
+ * It iterates through the array and frees each individual token,
+ * and then frees the array itself.
+ *
+ * Return: This function does not return a value.
+ */
+void free_tokens(char **tokens)
+{
+	int i;
+
+	for (i = 0; tokens[i] != NULL; i++)
+		free(tokens[i]);
+
+	free(tokens);
 }
 
 /*char *get_location(char *command)
