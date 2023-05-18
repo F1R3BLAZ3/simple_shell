@@ -26,7 +26,7 @@ void execute_command(char **tokens)
 
 	if (path == NULL)
 	{
-		printf("Command not found: %s\n", tokens[0]);
+		_write("Command not found\n");
 		return;
 	}
 
@@ -79,18 +79,17 @@ void execute_command(char **tokens)
 char *search_path(char **tokens)
 {
 	char *dir, *token, *path = getenv("PATH");
-	char *reversed_path = strdup(path);
-	char *token_end = reversed_path + strlen(reversed_path) - 1;
+	char *path_copy = _strdup(path);
 
-	if (strchr(tokens[0], '/'))
+	if (_strchr(tokens[0], '/'))
 	{
-		return (strdup(tokens[0]));
+		return (_strdup(tokens[0]));
 	}
 
-	token = strtok_r(reversed_path, PATH_SEPARATOR, &token_end);
+	token = strtok(path_copy, PATH_SEPARATOR);
 	while (token != NULL)
 	{
-		dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
+		dir = malloc(_strlen(token) + _strlen(tokens[0]) + 2);
 		if (!dir)
 		{
 			perror("Memory allocation error");
@@ -100,12 +99,12 @@ char *search_path(char **tokens)
 		sprintf(dir, "%s/%s", token, tokens[0]);
 		if (access(dir, F_OK | X_OK) == 0)
 		{
-			free(reversed_path);
+			free(path_copy);
 			return (dir);
 		}
 		free(dir);
-		token = strtok_r(NULL, PATH_SEPARATOR, &token_end);
+		token = strtok(NULL, PATH_SEPARATOR);
 	}
-	free(reversed_path);
+	free(path_copy);
 	return (NULL);
 }

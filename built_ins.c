@@ -14,7 +14,8 @@ void execute_echo_path(void)
 {
 	char *path = getenv("PATH");
 
-	printf("%s\n", path);
+	_write(path);
+	_write("\n");
 }
 
 /**
@@ -28,6 +29,6 @@ void execute_echo_path(void)
  */
 void execute_exit(void)
 {
-	printf("Bye..\n");
+	_write("Bye..\n");
 	exit(0);
 }

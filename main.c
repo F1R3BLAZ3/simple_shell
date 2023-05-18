@@ -33,12 +33,12 @@ int main(int argc, char **argv)
 	/* create an infinite loop */
 	while (1)
 	{
-		printf("%s", prompt);
+		_write(prompt);
 		fflush(stdout);
 		val = getline(&buf, &(size_t){0}, stdin);
 		if (val == -1)
 		{
-			printf("Exiting shell..\n");
+			_write("Exiting shell..\n");
 			return (-1);
 		}
 		tokens = tokenize(buf);
@@ -48,9 +48,9 @@ int main(int argc, char **argv)
 			continue;
 		}
 
-		if (strcmp(tokens[0], "echo") == 0 && strcmp(tokens[1], "$PATH") == 0)
+		if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
 			execute_echo_path();
-		else if (strcmp(tokens[0], "exit") == 0)
+		else if (_strcmp(tokens[0], "exit") == 0)
 			execute_exit();
 		else
 			execute_command(tokens);
