@@ -2,3 +2,6 @@
 .vscode/launch.json
 .vscode/c_cpp_properties.json
 hsh
+results
+checker.sh
+RUNME copy
