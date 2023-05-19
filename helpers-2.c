@@ -28,7 +28,6 @@ int read_data(char *buffer, int remaining, FILE *stream)
  * @str: The buffer where the line is stored
  * @buffer: The temporary buffer containing the read data
  * @bytesRead: The number of bytes read from the stream
- * @size: The maximum number of characters to be read
  *
  * Description: This function processes the buffer and extracts a line of text
  * into the `str` buffer. It copies the characters from the `buffer` to the
@@ -44,11 +43,12 @@ int read_data(char *buffer, int remaining, FILE *stream)
  * (including the newline character) is returned. If the end of the buffer is
  * reached before reading any newline character, NULL is returned.
  */
-char *process_buffer(char *str, char *buffer, int bytesRead, int size)
+char *process_buffer(char *str, char *buffer, int bytesRead)
 {
+	int i;
 	int totalBytesRead = 0;
 
-	for (int i = 0; i < bytesRead; i++)
+	for (i = 0; i < bytesRead; i++)
 	{
 		if (buffer[i] == '\n')
 		{
@@ -100,27 +100,29 @@ char *process_buffer(char *str, char *buffer, int bytesRead, int size)
  */
 char *_fgets(char *str, int size, FILE *stream)
 {
+	int totalBytesRead, remaining, bytesRead;
+	char *buffer;
+
+	totalBytesRead = 0, bytesRead = 0;
+
 	if (str == NULL || size <= 0 || stream == NULL)
 		return (NULL);
 
-	int bytesRead;
-	char *buffer = (char *)malloc(MAX_LINE_LENGTH * sizeof(char));
+	buffer = (char *)malloc(MAX_LINE_LENGTH * sizeof(char));
 
 	if (buffer == NULL)
 		return (NULL);
 
-	int totalBytesRead = 0;
-
 	while (totalBytesRead < size - 1)
 	{
-		int remaining = size - totalBytesRead - 1;
+		remaining = size - totalBytesRead - 1;
 
 		bytesRead = read_data(buffer, remaining, stream);
 
 		if (bytesRead <= 0)
 			break;
 
-		str = process_buffer(str, buffer, bytesRead, size);
+		str = process_buffer(str, buffer, bytesRead);
 		if (str != NULL)
 			return (str);
 
