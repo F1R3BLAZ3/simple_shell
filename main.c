@@ -26,6 +26,7 @@ int main(int argc, char **argv)
 {
 	char *buf, *prompt = "hsh: $ ";
 	char **tokens;
+	size_t n = 0;
 	ssize_t val;
 	(void)argc;
 	(void)argv;
@@ -34,7 +35,7 @@ int main(int argc, char **argv)
 	{
 		_write(prompt);
 		fflush(stdout);
-		val = getline(&buf, &(size_t){0}, stdin);
+		val = getline(&buf, &n, stdin);
 		if (val == -1)
 		{
 			_write("Exiting shell..\n");

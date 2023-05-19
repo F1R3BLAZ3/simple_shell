@@ -21,6 +21,7 @@
 
 void execute_command(char **tokens)
 {
+	pid_t pid;
 	char *path = search_path(tokens);
 	int status;
 
@@ -30,7 +31,7 @@ void execute_command(char **tokens)
 		return;
 	}
 
-	pid_t pid = fork();
+	pid = fork();
 
 	if (pid == -1)
 	{
