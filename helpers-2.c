@@ -74,7 +74,7 @@ char *process_buffer(char *str, char *buffer, int bytesRead, int size)
  * _fgets - Read a line from a file stream into a string
  * @str: The buffer where the line is stored
  * @size: The maximum number of characters to be read
- *        (including the null terminator)
+ * (including the null terminator)
  * @stream: The file stream to read from
  *
  * Description: This function reads a line of text from the specified file
