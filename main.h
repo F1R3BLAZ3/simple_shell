@@ -26,7 +26,7 @@ int _strcmp(char *s1, char *s2);
 char *_strchr(char *s, char c);
 char *_strdup(char *str);
 int _strlen(char *s);
-char *_fgets(char *str, int size, FILE *stream);
+int read_data(char *buffer, int remaining, FILE *stream);
 char *process_buffer(char *str, char *buffer, int bytesRead);
 char *_fgets(char *str, int size, FILE *stream);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
