@@ -50,6 +50,10 @@ int main(int argc, char **argv)
 
 		if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
 			execute_echo_path();
+		else if (strcmp(tokens[0], "setenv") == 0)
+			setenv_command(tokens);
+		else if (strcmp(tokens[0], "unsetenv") == 0)
+			unsetenv_command(tokens);
 		else if (_strcmp(tokens[0], "exit") == 0)
 			execute_exit(tokens[1]);
 		else
@@ -96,4 +100,36 @@ char **tokenize(char *input)
 
 	tokens[i] = NULL;
 	return (tokens);
+}
+
+int setenv_command(char **tokens)
+{
+	if (tokens[1] == NULL || tokens[2] == NULL)
+	{
+		fprintf(stderr, "Usage: setenv VARIABLE VALUE\n");
+		return -1;
+	}
+
+	if (setenv(tokens[1], tokens[2], 1) != 0)
+	{
+		perror("setenv");
+		return -1;
+	}
+	return 0;
+}
+
+int unsetenv_command(char **tokens)
+{
+	if (tokens[1] == NULL)
+	{
+		fprintf(stderr, "Usage: unsetenv VARIABLE\n");
+		return -1;
+	}
+
+	if (unsetenv(tokens[1]) != 0)
+	{
+		perror("unsetenv");
+		return -1;
+	}
+	return 0;
 }
