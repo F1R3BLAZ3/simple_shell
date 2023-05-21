@@ -27,8 +27,13 @@ void execute_echo_path(void)
  *
  * Return: This function does not return a value.
  */
-void execute_exit(void)
-{
+void execute_exit(char *argument)
+{	int status;
+
+	status = 0;
+	if (argument != NULL){
+		status = _atoi(argument, _strlen(argument));
+	}
 	_write("Bye..\n");
-	exit(0);
+	exit(status);
 }

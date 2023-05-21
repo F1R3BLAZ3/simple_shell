@@ -73,70 +73,10 @@ char *_memcpy(char *dest, char *src, unsigned int n)
 	return (dest);
 }
 
-ssize_t _getline(char **buf, size_t *n, FILE *stream)
+int _atoi(char *str, int n)
 {
-	size_t new_size;
-	size_t len;
-	char *new_buf;
+	if (n == 1)
+		return (*str - '0');
 
-	if (buf == NULL || n == NULL)
-	{
-		perror("Error: Invalid buffer or size");
-		return (-1);
-	}
-
-	if (*buf == NULL || *n == 0)
-	{
-		*buf = malloc(128 * sizeof(char));
-		if (*buf == NULL)
-		{
-			perror("Error: Memory allocation failed");
-			return (-1);
-		}
-		*n = 128;
-	}
-
-	if (_fgets(*buf, (int)*n, stream) == NULL)
-		return (-1);
-
-	len = _strlen(*buf);
-
-	if (len > 0 && (*buf)[len - 1] == '\n')
-		(*buf)[len - 1] = '\0';
-	else if (len == (*n - 1) && (*buf)[len - 1] != '\n')
-	{
-		new_size = *n * 2;
-		new_buf = _realloc(*buf, *n, new_size);
-		if (new_buf == NULL)
-		{
-			perror("Error: Memory reallocation failed");
-			return (-1);
-		}
-		*buf = new_buf;
-		*n = new_size;
-
-		while (_fgets(*buf + len, (int)(*n - len), stream) != NULL)
-		{
-			len += _strlen(*buf + len);
-			if (len > 0 && (*buf)[len - 1] == '\n')
-			{
-				(*buf)[len - 1] = '\0';
-				break;
-			}
-
-			if (len == (*n - 1) && (*buf)[len - 1] != '\n')
-			{
-				new_size = *n * 2;
-				new_buf = _realloc(*buf, *n, new_size);
-				if (new_buf == NULL)
-				{
-					perror("Error: Memory reallocation failed");
-					return (-1);
-				}
-				*buf = new_buf;
-				*n = new_size;
-			}
-		}
-	}
-	return (len);
+	return (10 * _atoi(str, n - 1) + str[n - 1] - '0');
 }

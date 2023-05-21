@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 		if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
 			execute_echo_path();
 		else if (_strcmp(tokens[0], "exit") == 0)
-			execute_exit();
+			execute_exit(tokens[1]);
 		else
 			execute_command(tokens);
 		free(tokens);

@@ -19,7 +19,7 @@
 char **tokenize(char *input);
 void execute_command(char **tokens);
 char *search_path(char **tokens);
-void execute_exit(void);
+void execute_exit(char *argument);
 void execute_echo_path(void);
 ssize_t _write(const char *str);
 int _strcmp(char *s1, char *s2);
@@ -32,5 +32,9 @@ char *_fgets(char *str, int size, FILE *stream);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *_memcpy(char *dest, char *src, unsigned int n);
 ssize_t _getline(char **buf, size_t *n, FILE *stream);
+ssize_t read_line(char **buf, size_t *n, FILE *stream);
+ssize_t extend_buffer(char **buf, size_t *n, size_t new_size);
+ssize_t read_remaining(char **buf, size_t *n, FILE *stream, size_t len);
+int _atoi(char *str, int n);
 
 #endif /* MAIN_H */
