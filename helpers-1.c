@@ -115,7 +115,7 @@ ssize_t _getline(char **buf, size_t *n, FILE *stream)
         *buf = new_buf;
         *n = new_size;
 
-        while (fgets(*buf + len, (int)(*n - len), stream) != NULL)
+        while (_fgets(*buf + len, (int)(*n - len), stream) != NULL)
         {
             len += _strlen(*buf + len);
             if (len > 0 && (*buf)[len - 1] == '\n')
