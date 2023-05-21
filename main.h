@@ -38,5 +38,6 @@ ssize_t read_remaining(char **buf, size_t *n, FILE *stream, size_t len);
 int _atoi(char *str, int n);
 int setenv_command(char **tokens);
 int unsetenv_command(char **tokens);
+char* _strtok(char* s, char delimiter);
 
 #endif /* MAIN_H */
