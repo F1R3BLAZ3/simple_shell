@@ -33,5 +33,4 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *_memcpy(char *dest, char *src, unsigned int n);
 ssize_t _getline(char **buf, size_t *n, FILE *stream);
 
-
 #endif /* MAIN_H */
