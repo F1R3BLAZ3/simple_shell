@@ -12,14 +12,14 @@
  * corresponding environment variable is returned. If no match is found,
  * NULL is returned.
  *
- * Return: A pointer to the value of the environment variable, or NULL if not found.
+ * Return: A pointer to the value of the environment variable,
+ * or NULL if not found.
  */
-char **_getenv(const char *name)
+char *_getenv(const char *name)
 {
-	
-        extern char **environ;
-        int i;
+	int i;
 	size_t l;
+	const char *value;
 
 	l = _strlen(name);
 
@@ -28,8 +28,11 @@ char **_getenv(const char *name)
 
 	for (i = 0; environ[i]; i++)
 	{
-		if (_strncmp(name, environ[i], l) == 0)
-			return (&environ[i]);
+		if (_strncmp(name, environ[i], l) == 0 && environ[i][l] == '=')
+		{
+			value = environ[i] + l + 1;
+			return ((char *)value);
+		}
 	}
 
 	return (NULL);

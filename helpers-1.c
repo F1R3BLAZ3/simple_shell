@@ -119,15 +119,35 @@ int _atoi(char *str, int n)
 	return (10 * _atoi(str, n - 1) + str[n - 1] - '0');
 }
 
+/**
+ * _strncmp - Compare two strings up to a specified number of characters
+ * @s1: The first string to compare
+ * @s2: The second string to compare
+ * @n: The maximum number of characters to compare
+ *
+ * Description: This function compares the first 'n' characters of the strings
+ * 's1' and 's2'. It returns an integer value indicating the relationship
+ * between the strings:
+ * If the value is less than 0, it means 's1' is less than 's2'.
+ * If the value is greater than 0, it means 's1' is greater than 's2'.
+ * If the value is 0, it means the first 'n' characters of both strings are
+ * equal.
+ *
+ * Return: The function returns an integer value indicating the relationship
+ * between the strings.
+ */
 int _strncmp(const char *s1, const char *s2, size_t n)
 {
-	int result;
-
 	while (n > 0)
 	{
-		result = _strcmp(s1, s2);
-		if (result != 0)
-			return (result);
+		if (*s1 != *s2)
+		{
+			return (*(unsigned char *)s1 - *(unsigned char *)s2);
+		}
+		else if (*s1 == '\0')
+		{
+			return (0);
+		}
 
 		s1++;
 		s2++;

@@ -30,44 +30,44 @@
 
 int main(int argc, char **argv)
 {
-        char *buf, *prompt = "hsh: $ ";
-        char **tokens;
-        size_t n = 0;
-        ssize_t val;
-        (void)argc;
-        (void)argv;
+	char *buf, *prompt = "hsh: $ ";
+	char **tokens;
+	size_t n = 0;
+	ssize_t val;
+	(void)argc;
+	(void)argv;
 
-        while (1)
-        {
-                _write(prompt);
-                fflush(stdout);
-                val = getline(&buf, &n, stdin);
-                if (val == -1)
-                {
-                        _write("Exiting shell..\n");
-                        return (-1);
-                }
-                tokens = tokenize(buf);
-                if (tokens[0] == NULL)
-                {
-                        free(tokens);
-                        continue;
-                }
+	while (1)
+	{
+		_write(prompt);
+		fflush(stdout);
+		val = getline(&buf, &n, stdin);
+		if (val == -1)
+		{
+			_write("Exiting shell..\n");
+			return (-1);
+		}
+		tokens = tokenize(buf);
+		if (tokens[0] == NULL)
+		{
+			free(tokens);
+			continue;
+		}
 
-                if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
-                        execute_echo_path();
-                else if (_strcmp(tokens[0], "setenv") == 0)
-                        setenv_command(tokens);
-                else if (_strcmp(tokens[0], "unsetenv") == 0)
-                        unsetenv_command(tokens);
-                else if (_strcmp(tokens[0], "exit") == 0)
-                        execute_exit(tokens[1]);
-                else
-                        execute_command(tokens);
-                free(tokens);
-        }
-        free(buf);
-        return (0);
+		if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
+			execute_echo_path();
+		else if (_strcmp(tokens[0], "setenv") == 0)
+			setenv_command(tokens);
+		else if (_strcmp(tokens[0], "unsetenv") == 0)
+			unsetenv_command(tokens);
+		else if (_strcmp(tokens[0], "exit") == 0)
+			execute_exit(tokens[1]);
+		else
+			execute_command(tokens);
+		free(tokens);
+	}
+	free(buf);
+	return (0);
 }
 
 /**
@@ -85,59 +85,59 @@ int main(int argc, char **argv)
  */
 char **tokenize(char *input)
 {
-        char **tokens = malloc(BUFSIZE * sizeof(char *));
-        char *token;
-        int i;
+	char **tokens = malloc(BUFSIZE * sizeof(char *));
+	char *token;
+	int i;
 
-        i = 0;
-        if (!tokens)
-        {
-                perror("Memory allocation error");
-                exit(EXIT_FAILURE);
-        }
+	i = 0;
+	if (!tokens)
+	{
+		perror("Memory allocation error");
+		exit(EXIT_FAILURE);
+	}
 
-        token = _strtok(input, PATH_SEPARATOR);
-        while (token != NULL)
-        {
-                printf("tokens[%d]: %s\n", i, token);
-                tokens[i] = token;
-                i++;
-                token = _strtok(NULL, PATH_SEPARATOR);
-        }
+	token = _strtok(input, PATH_SEPARATOR);
+	while (token != NULL)
+	{
+		printf("tokens[%d]: %s\n", i, token);
+		tokens[i] = token;
+		i++;
+		token = _strtok(NULL, PATH_SEPARATOR);
+	}
 
-        printf("tokens[%d]: %s\n", i, token);
-        tokens[i] = NULL;
-        return (tokens);
+	printf("tokens[%d]: %s\n", i, token);
+	tokens[i] = NULL;
+	return (tokens);
 }
 
 int setenv_command(char **tokens)
 {
-        if (tokens[1] == NULL || tokens[2] == NULL)
-        {
-                fprintf(stderr, "Usage: setenv VARIABLE VALUE\n");
-                return -1;
-        }
+	if (tokens[1] == NULL || tokens[2] == NULL)
+	{
+		fprintf(stderr, "Usage: setenv VARIABLE VALUE\n");
+		return (-1);
+	}
 
-        if (setenv(tokens[1], tokens[2], 1) != 0)
-        {
-                perror("setenv");
-                return -1;
-        }
-        return 0;
+	if (setenv(tokens[1], tokens[2], 1) != 0)
+	{
+		perror("setenv");
+		return (-1);
+	}
+	return (0);
 }
 
 int unsetenv_command(char **tokens)
 {
-        if (tokens[1] == NULL)
-        {
-                fprintf(stderr, "Usage: unsetenv VARIABLE\n");
-                return -1;
-        }
+	if (tokens[1] == NULL)
+	{
+		fprintf(stderr, "Usage: unsetenv VARIABLE\n");
+		return (-1);
+	}
 
-        if (unsetenv(tokens[1]) != 0)
-        {
-                perror("unsetenv");
-                return -1;
-        }
-        return 0;
+	if (unsetenv(tokens[1]) != 0)
+	{
+		perror("unsetenv");
+		return (-1);
+	}
+	return (0);
 }

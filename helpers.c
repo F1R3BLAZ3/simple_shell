@@ -107,7 +107,7 @@ const char *_strchr(const char *s, char c)
  * Return: pointer to the duplicated string, or NULL if insufficient memory
  * was available or str was NULL
  */
-char *_strdup(char *str)
+char *_strdup(const char *str)
 {
 	char *dup;
 	unsigned int len, i;

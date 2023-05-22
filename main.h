@@ -24,7 +24,7 @@ void execute_echo_path(void);
 ssize_t _write(const char *str);
 int _strcmp(const char *s1, const char *s2);
 const char *_strchr(const char *s, char c);
-char *_strdup(char *str);
+char *_strdup(const char *str);
 int _strlen(const char *s);
 int read_data(char *buffer, int remaining, FILE *stream);
 char *process_buffer(char *str, char *buffer, int bytesRead);
@@ -40,7 +40,7 @@ int setenv_command(char **tokens);
 int unsetenv_command(char **tokens);
 unsigned int check_delim(char c, char *delim);
 char *_strtok(char *str, char *delim);
-char **_getenv(const char *name);
+char *_getenv(const char *name);
 int _strncmp(const char *s1, const char *s2, size_t n);
 
 #endif /* MAIN_H */

@@ -79,7 +79,7 @@ void execute_command(char **tokens)
  */
 char *search_path(char **tokens)
 {
-	char *dir, *token, *path = getenv("PATH");
+	char *dir, *token, *path = _getenv("PATH");
 	char *path_copy = _strdup(path);
 
 	if (_strchr(tokens[0], '/'))

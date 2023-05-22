@@ -44,11 +44,12 @@ unsigned int check_delim(char c, char *delim)
  * reached, NULL is returned. The function assumes that str points to a
  * null-terminated string.
  *
- * Return: A pointer to the next token in the string, or NULL if there are no more tokens.
+ * Return: A pointer to the next token in the string,
+ * or NULL if there are no more tokens.
  */
 char *_strtok(char *str, char *delim)
 {
-	static char *input = NULL;
+	static char *input;
 	char *result;
 
 	if (str)
@@ -61,7 +62,7 @@ char *_strtok(char *str, char *delim)
 		input++;
 
 	if (*input == '\0')
-		return NULL;
+		return (NULL);
 
 	result = input;
 
@@ -77,5 +78,5 @@ char *_strtok(char *str, char *delim)
 	else
 		input = NULL;
 
-	return result;
+	return (result);
 }

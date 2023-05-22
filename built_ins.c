@@ -12,7 +12,7 @@
  */
 void execute_echo_path(void)
 {
-	char *path = getenv("PATH");
+	char *path = _getenv("PATH");
 
 	_write(path);
 	_write("\n");
@@ -20,6 +20,7 @@ void execute_echo_path(void)
 
 /**
  * execute_exit - Execute the 'exit' command
+ * @argument: The argument provided to the 'exit' command
  *
  * Description: This function prints a goodbye message to the standard output,
  * indicating the termination of the shell program. It then exits the program
@@ -31,7 +32,8 @@ void execute_exit(char *argument)
 {	int status;
 
 	status = 0;
-	if (argument != NULL){
+	if (argument != NULL)
+	{
 		status = _atoi(argument, _strlen(argument));
 	}
 	_write("Bye..\n");
