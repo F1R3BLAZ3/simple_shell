@@ -57,34 +57,25 @@ char *_strtok(char *str, char *delim)
 	if (input == NULL)
 		return (NULL);
 
-	while (1)
-	{
-		if (check_delim(*str, delim))
-		{
-			str++;
-			continue;
-		}
-		if (*str == '\0')
-		{
-			return (NULL);
-		}
-		break;
-	}
+	while (*input && check_delim(*input, delim))
+		input++;
 
-	result = str;
-	while (1)
+	if (*input == '\0')
+		return NULL;
+
+	result = input;
+
+	while (*input && !check_delim(*input, delim))
+		input++;
+
+	if (*input)
 	{
-		if (*str == '\0')
-		{
-			input = str;
-			return (result);
-		}
-		if (check_delim(*str, delim))
-		{
-			*str = '\0';
-			input = str + 1;
-			return (result);
-		}
-		str++;
+		*input++ = '\0';
+		while (*input && check_delim(*input, delim))
+			input++;
 	}
+	else
+		input = NULL;
+
+	return result;
 }
