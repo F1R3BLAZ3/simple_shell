@@ -41,7 +41,7 @@ int main(int argc, char **argv)
         {
                 _write(prompt);
                 fflush(stdout);
-                val = _getline(&buf, &n, stdin);
+                val = getline(&buf, &n, stdin);
                 if (val == -1)
                 {
                         _write("Exiting shell..\n");
@@ -56,9 +56,9 @@ int main(int argc, char **argv)
 
                 if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
                         execute_echo_path();
-                else if (strcmp(tokens[0], "setenv") == 0)
+                else if (_strcmp(tokens[0], "setenv") == 0)
                         setenv_command(tokens);
-                else if (strcmp(tokens[0], "unsetenv") == 0)
+                else if (_strcmp(tokens[0], "unsetenv") == 0)
                         unsetenv_command(tokens);
                 else if (_strcmp(tokens[0], "exit") == 0)
                         execute_exit(tokens[1]);
@@ -99,11 +99,13 @@ char **tokenize(char *input)
         token = _strtok(input, PATH_SEPARATOR);
         while (token != NULL)
         {
+                printf("tokens[%d]: %s\n", i, token);
                 tokens[i] = token;
                 i++;
                 token = _strtok(NULL, PATH_SEPARATOR);
         }
 
+        printf("tokens[%d]: %s\n", i, token);
         tokens[i] = NULL;
         return (tokens);
 }

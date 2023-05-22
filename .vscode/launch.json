@@ -5,15 +5,21 @@
         "version": "0.2.0",
         "configurations": [
                 {
-                        "name": "(gdb) Launch",
+                        "name": "(gdb) Pipe Launch",
                         "type": "cppdbg",
                         "request": "launch",
-                        "program": "/home/vagrant/ALX/simple_shell/hsh",
+                        "program": "${workspaceFolder}/hsh",
                         "args": [],
                         "stopAtEntry": false,
                         "cwd": "${fileDirname}",
                         "environment": [],
                         "externalConsole": false,
+                        "pipeTransport": {
+                                "debuggerPath": "/usr/bin/gdb",
+                                "pipeProgram": "/usr/bin/ssh",
+                                "pipeArgs": [],
+                                "pipeCwd": ""
+                        },
                         "MIMode": "gdb",
                         "setupCommands": [
                             {
@@ -26,7 +32,7 @@
                                 "text": "-gdb-set disassembly-flavor intel",
                                 "ignoreFailures": true
                             }
-                        ],
+                        ]
                 }
 
         ]

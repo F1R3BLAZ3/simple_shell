@@ -45,7 +45,7 @@ ssize_t _write(const char *str)
  * than 0 if s1 is found to be greater than s2, and 0 if the two strings are
  * identical.
  */
-int _strcmp(char *s1, char *s2)
+int _strcmp(const char *s1, const char *s2)
 {
 	int i;
 
@@ -75,7 +75,7 @@ int _strcmp(char *s1, char *s2)
  * Return: A pointer to the first occurrence of the character c
  * in the string s, or NULL if the character is not found.
  */
-char *_strchr(char *s, char c)
+const char *_strchr(const char *s, char c)
 {
 	while (*s != '\0')
 	{
@@ -151,7 +151,7 @@ char *_strdup(char *str)
  *
  * Return: The length of the string.
  */
-int _strlen(char *s)
+int _strlen(const char *s)
 {
 	if (*s == '\0')
 	{

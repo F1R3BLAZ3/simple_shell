@@ -118,3 +118,20 @@ int _atoi(char *str, int n)
 
 	return (10 * _atoi(str, n - 1) + str[n - 1] - '0');
 }
+
+int _strncmp(const char *s1, const char *s2, size_t n)
+{
+	int result;
+
+	while (n > 0)
+	{
+		result = _strcmp(s1, s2);
+		if (result != 0)
+			return (result);
+
+		s1++;
+		s2++;
+		n--;
+	}
+	return (0);
+}
