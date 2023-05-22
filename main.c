@@ -99,13 +99,11 @@ char **tokenize(char *input)
 	token = _strtok(input, PATH_SEPARATOR);
 	while (token != NULL)
 	{
-		printf("tokens[%d]: %s\n", i, token);
 		tokens[i] = token;
 		i++;
 		token = _strtok(NULL, PATH_SEPARATOR);
 	}
 
-	printf("tokens[%d]: %s\n", i, token);
 	tokens[i] = NULL;
 	return (tokens);
 }
