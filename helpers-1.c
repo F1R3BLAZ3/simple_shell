@@ -155,3 +155,28 @@ int _strncmp(const char *s1, const char *s2, size_t n)
 	}
 	return (0);
 }
+
+/**
+ * _strcpy - copies the string pointed to by src, including the terminating
+ * null byte, to the buffer pointed to by dest
+ * @dest: pointer to the destination buffer
+ * @src: pointer to the source string
+ *
+ * Description: This function copies the string pointed to by 'src',
+ * including the terminating null byte, to the buffer pointed to by 'dest'.
+ * The function assumes that 'dest' has enough space to hold the copied string.
+ *
+ * Return: a pointer to the destination buffer
+ */
+char *_strcpy(char *dest, char *src)
+{
+	int i;
+
+	for (i = 0; src[i] != '\0'; i++)
+	{
+		dest[i] = src[i];
+	}
+	dest[i] = '\0';
+
+	return (dest);
+}

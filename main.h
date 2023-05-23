@@ -42,5 +42,13 @@ unsigned int check_delim(char c, char *delim);
 char *_strtok(char *str, char *delim);
 char *_getenv(const char *name);
 int _strncmp(const char *s1, const char *s2, size_t n);
+int _validate_setenv_input(const char *name, const char *value);
+int _setenv(const char *name, const char *value);
+char *_strcpy(char *dest, char *src);
+int _replace_env_variable(const char *name, char *new_env);
+void _append_env_variable(char **new_environ, char *new_env);
+size_t _get_environ_size(void);
+void _shift_env_pointers(char **env, size_t index);
+int _unsetenv(const char *name);
 
 #endif /* MAIN_H */
