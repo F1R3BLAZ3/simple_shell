@@ -16,7 +16,7 @@
 int _validate_setenv_input(const char *name, const char *value)
 {
 	if (name == NULL || name[0] == '\0' ||
-	    strchr(name, '=') != NULL || value == NULL)
+	    _strchr(name, '=') != NULL || value == NULL)
 	{
 		perror("Invalid input for setenv\n");
 		return (-1);

@@ -79,7 +79,7 @@ int _unsetenv(const char *name)
 	char **env;
 	int found;
 
-	if (name == NULL || name[0] == '\0' || strchr(name, '=') != NULL)
+	if (name == NULL || name[0] == '\0' || _strchr(name, '=') != NULL)
 	{
 		perror("Invalid input for unsetenv\n");
 		return (-1);
