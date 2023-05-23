@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	{
 		_write(prompt);
 		fflush(stdout);
-		val = getline(&buf, &n, stdin);
+		val = _getline(&buf, &n, stdin);
 		if (val == -1)
 		{
 			_write("Exiting shell..\n");

@@ -31,7 +31,7 @@ char *process_buffer(char *str, char *buffer, int bytesRead);
 char *_fgets(char *str, int size, FILE *stream);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *_memcpy(char *dest, char *src, unsigned int n);
-ssize_t _getline(char **buf, size_t *n, FILE *stream);
+ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
 ssize_t read_line(char **buf, size_t *n, FILE *stream);
 ssize_t extend_buffer(char **buf, size_t *n, size_t new_size);
 ssize_t read_remaining(char **buf, size_t *n, FILE *stream, size_t len);
