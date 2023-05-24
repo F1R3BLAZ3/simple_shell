@@ -18,8 +18,6 @@ int main(int argc, char *argv[])
 {
 	char *command;
 	size_t buffer_size = BUFFER_SIZE;
-	int interactive_mode = isatty(STDIN_FILENO);
-	int command_executed = 0;
 
 	if (argc > 0)
 		program_name = argv[0];
@@ -28,16 +26,8 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		if (interactive_mode && !command_executed)
-		{
-			printf("$ ");
-			fflush(stdout);
-		}
-		else if (!interactive_mode)
-		{
-			printf("$ ");
-			fflush(stdout);
-		}
+		printf("$ ");
+
 		command = (char *)malloc(buffer_size * sizeof(char));
 		if (command == NULL)
 		{
@@ -60,7 +50,9 @@ int main(int argc, char *argv[])
 		}
 
 		command[strcspn(command, "\n")] = '\0';
+
 		execute_command(command);
+
 		free(command);
 	}
 
