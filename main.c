@@ -37,36 +37,59 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
-	while (1)
+	if (!isatty(STDIN_FILENO))
 	{
-		_write(prompt);
-		fflush(stdout);
-		val = _getline(&buf, &n, stdin);
-		if (val == -1)
+		while ((val = _getline(&buf, &n, stdin)) != -1)
 		{
-			_write("Exiting shell..\n");
-			return (-1);
-		}
-		tokens = tokenize(buf);
-		if (tokens[0] == NULL)
-		{
-			free(tokens);
-			continue;
-		}
-
-		if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
-			execute_echo_path();
-		else if (_strcmp(tokens[0], "exit") == 0)
-			execute_exit(tokens[1]);
-		else if (_strcmp(tokens[0], "setenv") == 0)
-			_setenv(tokens[1], tokens[2]);
-		else if (_strcmp(tokens[0], "unsetenv") == 0)
-			_unsetenv(tokens[1]);
-		else
+			tokens = tokenize(buf);
+			if (tokens[0] == NULL)
+			{
+				free(tokens);
+				continue;
+			}
 			execute_command(tokens);
-		free(tokens);
+			free(tokens);
+			_write(prompt);
+		}
+		free(buf);
 	}
-	free(buf);
+	else
+	{
+		while (1)
+		{
+			_write(prompt);
+			fflush(stdout);
+			val = _getline(&buf, &n, stdin);
+			if (val == -1)
+				return (-1);
+			tokens = tokenize(buf);
+			if (tokens[0] == NULL)
+			{
+				free(tokens);
+				continue;
+			}
+
+			if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
+				execute_echo_path();
+			else if (_strcmp(tokens[0], "exit") == 0)
+			{
+				execute_exit(tokens[1]);
+				free(tokens);
+				free(buf);
+				return (0);
+			}
+			else if (_strcmp(tokens[0], "setenv") == 0)
+				_setenv(tokens[1], tokens[2]);
+			else if (_strcmp(tokens[0], "unsetenv") == 0)
+				_unsetenv(tokens[1]);
+			else
+				execute_command(tokens);
+
+			free(tokens);
+		}
+		free(buf);
+	}
+
 	return (0);
 }
 

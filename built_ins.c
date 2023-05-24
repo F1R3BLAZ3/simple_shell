@@ -36,6 +36,5 @@ void execute_exit(char *argument)
 	{
 		status = _atoi(argument, _strlen(argument));
 	}
-	_write("Bye..\n");
 	exit(status);
 }
