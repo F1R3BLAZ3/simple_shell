@@ -6,13 +6,15 @@
 #include <sys/wait.h>
 
 #define BUFFER_SIZE 1024
+#define TOKEN_BUFFER_SIZE 64
 #define DELIM " \t\r\n\a"
 
 char *program_name;
 
-void execute_command(char *command);
+int execute_command(char **args);
 char **split_command(char *command);
 int count_tokens(char *command);
+char *get_command_path(char *command);
 
 int main(int argc, char *argv[])
 {
@@ -28,16 +30,12 @@ int main(int argc, char *argv[])
 
 	while (1)
 	{
-		if (interactive_mode && !command_executed)
+		if (interactive_mode || !command_executed)
 		{
 			printf("$ ");
 			fflush(stdout);
 		}
-		else if (!interactive_mode)
-		{
-			printf("$ ");
-			fflush(stdout);
-		}
+
 		command = (char *)malloc(buffer_size * sizeof(char));
 		if (command == NULL)
 		{
@@ -62,62 +60,82 @@ int main(int argc, char *argv[])
 		command[strcspn(command, "\n")] = '\0';
 		execute_command(command);
 		free(command);
+
+		command_executed = 1;
 	}
 
 	return EXIT_SUCCESS;
 }
 
-void execute_command(char *command)
+int execute_command(char **args)
 {
-	pid_t pid;
-	int status;
-	char **args;
+    pid_t pid;
+    int status;
+    char *command_path;
 
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		args = split_command(command);
+    pid = fork();
+    if (pid == 0)
+    {
+        command_path = get_command_path(args[0]);
+        if (command_path == NULL)
+        {
+            perror("command not found");
+            exit(EXIT_FAILURE);
+        }
+        execvpe(command_path, args, environ);
+        perror("execvpe");
+        exit(EXIT_FAILURE);
+    }
+    else if (pid < 0)
+    {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        waitpid(pid, &status, 0);
+    }
 
-		if (execvp(args[0], args) == -1)
-		{
-			fprintf(stderr, "%s: 1: %s: not found\n", program_name, args[0]);
-			exit(EXIT_FAILURE);
-		}
-
-		exit(EXIT_SUCCESS);
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-	}
+    return 1;
 }
+
 
 char **split_command(char *command)
 {
+	const char *delimiters = " \t\r\n\v\f";
+	char **tokens = NULL;
 	char *token;
-	int i = 0;
+	int position = 0;
+	int buffer_size = TOKEN_BUFFER_SIZE;
 
-	int token_count = count_tokens(command);
-	char **tokens = (char **)malloc((token_count + 1) * sizeof(char *));
+	tokens = malloc(buffer_size * sizeof(char *));
 	if (tokens == NULL)
 	{
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
 
-	token = strtok(command, DELIM);
+	token = strtok(command, delimiters);
 	while (token != NULL)
 	{
-		tokens[i] = token;
-		i++;
-		token = strtok(NULL, DELIM);
+		tokens[position] = strdup(token);
+		position++;
+
+		if (position >= buffer_size)
+		{
+			buffer_size += TOKEN_BUFFER_SIZE;
+			tokens = realloc(tokens, buffer_size * sizeof(char *));
+			if (tokens == NULL)
+			{
+				perror("realloc");
+				exit(EXIT_FAILURE);
+			}
+		}
+
+		token = strtok(NULL, delimiters);
 	}
-	tokens[i] = NULL;
+
+	tokens[position] = NULL;
 
 	return tokens;
 }
@@ -143,4 +161,30 @@ int count_tokens(char *command)
 	}
 
 	return count;
+}
+
+char *get_command_path(char *command)
+{
+    char *path_env = getenv("PATH");
+    char *dir;
+    char *path;
+    char *full_path;
+
+    path = strtok(path_env, ":");
+    while (path != NULL)
+    {
+        full_path = malloc(strlen(path) + strlen(command) + 2);
+        if (full_path == NULL)
+        {
+            perror("malloc");
+            exit(EXIT_FAILURE);
+        }
+        sprintf(full_path, "%s/%s", path, command);
+        if (access(full_path, X_OK) == 0)
+            return full_path;
+        free(full_path);
+        path = strtok(NULL, ":");
+    }
+
+    return NULL;
 }
