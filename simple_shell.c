@@ -16,11 +16,21 @@ int main(void)
 {
 	char *command;
 	size_t buffer_size = BUFFER_SIZE;
+	int interactive_mode = isatty(STDIN_FILENO);
+	int command_executed = 0;
 
 	while (1)
 	{
-		printf("$ ");
-
+		if (interactive_mode && !command_executed)
+		{
+			printf("$ ");
+			fflush(stdout);
+		}
+		else if (!interactive_mode)
+		{
+			printf("$ ");
+			fflush(stdout);
+		}
 		command = (char *)malloc(buffer_size * sizeof(char));
 		if (command == NULL)
 		{
@@ -43,9 +53,7 @@ int main(void)
 		}
 
 		command[strcspn(command, "\n")] = '\0';
-
 		execute_command(command);
-
 		free(command);
 	}
 
