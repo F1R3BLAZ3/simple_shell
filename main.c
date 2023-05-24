@@ -34,12 +34,17 @@ int main(int argc, char **argv)
 	char **tokens;
 	size_t n = 0;
 	ssize_t val;
+	bool pipe = false;
 	(void)argc;
 	(void)argv;
 
-	while (1)
+	while (1 && !pipe)
 	{
 		_write(prompt);
+		if (isatty(STDIN_FILENO) == 0)
+		{
+			pipe = true;
+		}
 		fflush(stdout);
 		val = getline(&buf, &n, stdin);
 		if (val == -1)
