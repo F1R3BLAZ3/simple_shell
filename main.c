@@ -34,27 +34,27 @@ int main(int argc, char **argv)
 	char **tokens;
 	size_t n = 0;
 	ssize_t val;
-	int interactive = isatty(fileno(stdin));
+	bool pipe = false;
 	(void)argc;
 	(void)argv;
 
-	while (1)
+	while (1 && !pipe)
 	{
-		if (interactive)
-			_write(prompt);
+		_write(prompt);
+		if (isatty(STDIN_FILENO) == 0)
+		{
+			pipe = true;
+		}
 		fflush(stdout);
 		val = getline(&buf, &n, stdin);
 		if (val == -1)
 		{
-			free(buf);
-			break;
+			return (-1);
 		}
-		buf[val - 1] = '\0';
 		tokens = tokenize(buf);
 		if (tokens[0] == NULL)
 		{
 			free(tokens);
-			free(buf);
 			continue;
 		}
 
@@ -63,16 +63,14 @@ int main(int argc, char **argv)
 		else if (_strcmp(tokens[0], "exit") == 0)
 			execute_exit(tokens[1]);
 		/* else if (_strcmp(tokens[0], "setenv") == 0)
-			_setenv(tokens[1], tokens[2]);
+		 	_setenv(tokens[1], tokens[2]);
 		 else if (_strcmp(tokens[0], "unsetenv") == 0)
-			_unsetenv(tokens[1]); */
+                        _unsetenv(tokens[1]); */
 		else
 			execute_command(tokens);
 		free(tokens);
-		free(buf);
-		buf = NULL;
-		n = 0;
 	}
+	free(buf);
 	return (0);
 }
 
