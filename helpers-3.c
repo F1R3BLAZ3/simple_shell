@@ -13,7 +13,8 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 	while (1)
 	{
 		if (position >= bytesRead)
-		{	position = 0;
+		{
+			position = 0;
 			bytesRead = read(fileno(stream), buffer, BUFSIZE);
 
 			if (bytesRead <= 0)

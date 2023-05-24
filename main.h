@@ -33,8 +33,6 @@ ssize_t read_line(char **buf, size_t *n, FILE *stream);
 ssize_t extend_buffer(char **buf, size_t *n, size_t new_size);
 ssize_t read_remaining(char **buf, size_t *n, FILE *stream, size_t len);
 int _atoi(char *str, int n);
-int setenv_command(char **tokens);
-int unsetenv_command(char **tokens);
 unsigned int check_delim(char c, char *delim);
 char *_strtok(char *str, char *delim);
 char *_getenv(const char *name);
