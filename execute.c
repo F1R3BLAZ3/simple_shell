@@ -19,7 +19,7 @@
  * Return: This function does not return a value.
  */
 
-void execute_command(char **tokens, int line_number)
+void execute_command(char **tokens)
 {
 	pid_t pid;
 	int status;
@@ -28,7 +28,7 @@ void execute_command(char **tokens, int line_number)
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("fork");
+		perror(tokens[0]);
 		exit(EXIT_FAILURE);
 	}
 
@@ -41,13 +41,13 @@ void execute_command(char **tokens, int line_number)
 			{
 				if (execve(path, tokens, environ) == -1)
 				{
-					fprintf(stderr, "%s: %d: %s: not found\n", tokens[0], line_number, tokens[0]);
+					perror(tokens[0]);
 					exit(EXIT_FAILURE);
 				}
 			}
 			else
 			{
-				fprintf(stderr, "%s: %d: %s: not found\n", tokens[0], line_number, tokens[0]);
+				perror(tokens[0]);
 				exit(EXIT_FAILURE);
 			}
 		}
