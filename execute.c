@@ -22,41 +22,32 @@
 void execute_command(char **tokens)
 {
 	pid_t pid;
+	char *path = search_path(tokens);
 	int status;
-	char *path;
 
-	pid = fork();
-	if (pid == -1)
+	if (path == NULL)
 	{
-		perror(tokens[0]);
-		exit(EXIT_FAILURE);
+		_write("Command not found\n");
+		return;
 	}
 
-	if (pid == 0)
+	pid = fork();
+
+	if (pid == -1)
 	{
-		if (execve(tokens[0], tokens, environ) == -1)
-		{
-			path = search_path(&tokens[0]);
-			if (path != NULL)
-			{
-				if (execve(path, tokens, environ) == -1)
-				{
-					perror(tokens[0]);
-					exit(EXIT_FAILURE);
-				}
-			}
-			else
-			{
-				perror(tokens[0]);
-				exit(EXIT_FAILURE);
-			}
-		}
+		perror("Error");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		execve(path, tokens, environ);
+		perror("execve");
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
-		wait(&status);
-		if (status != 0)
-			_write("hsh: $ ");
+		waitpid(pid, &status, 0);
+		free(path);
 	}
 }
 
