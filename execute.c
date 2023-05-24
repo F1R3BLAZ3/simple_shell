@@ -79,18 +79,18 @@ void execute_command(char **tokens)
  */
 char *search_path(char **tokens)
 {
-	char *dir, *token, *path = _getenv("PATH");
-	char *path_copy = _strdup(path);
+	char *dir, *token, *path = getenv("PATH");
+	char *path_copy = strdup(path);
 
 	if (_strchr(tokens[0], '/'))
 	{
-		return (_strdup(tokens[0]));
+		return (strdup(tokens[0]));
 	}
 
-	token = _strtok(path_copy, PATH_SEPARATOR);
+	token = strtok(path_copy, PATH_SEPARATOR);
 	while (token != NULL)
 	{
-		dir = malloc(_strlen(token) + _strlen(tokens[0]) + 2);
+		dir = malloc(strlen(token) + strlen(tokens[0]) + 2);
 		if (!dir)
 		{
 			perror("Memory allocation error");
@@ -104,7 +104,7 @@ char *search_path(char **tokens)
 			return (dir);
 		}
 		free(dir);
-		token = _strtok(NULL, PATH_SEPARATOR);
+		token = strtok(NULL, PATH_SEPARATOR);
 	}
 	free(path_copy);
 	return (NULL);
