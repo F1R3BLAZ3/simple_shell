@@ -8,21 +8,14 @@
 #define BUFFER_SIZE 1024
 #define DELIM " \t\r\n\a"
 
-char *program_name;
-
 void execute_command(char *command);
 char **split_command(char *command);
 int count_tokens(char *command);
 
-int main(int argc, char *argv[])
+int main(void)
 {
 	char *command;
 	size_t buffer_size = BUFFER_SIZE;
-
-	if (argc > 0)
-		program_name = argv[0];
-	else
-		program_name = "hsh";
 
 	while (1)
 	{
@@ -77,7 +70,7 @@ void execute_command(char *command)
 
 		if (execvp(args[0], args) == -1)
 		{
-			fprintf(stderr, "%s: 1: %s: not found\n", program_name, args[0]);
+			perror(args[0]);
 			exit(EXIT_FAILURE);
 		}
 
