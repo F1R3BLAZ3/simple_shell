@@ -44,7 +44,6 @@ int main(int argc, char **argv)
 		val = _getline(&buf, &n, stdin);
 		if (val == -1)
 		{
-			_write("Exiting shell..\n");
 			return (-1);
 		}
 		tokens = tokenize(buf);
