@@ -2,6 +2,8 @@
 
 #include "main.h"
 
+int line_number = 1;
+
 /**
  * main - Simple shell program
  * @argc: Number of arguments passed to the program
@@ -51,11 +53,12 @@ int main(int argc, char **argv)
 				_write("\n");
 				break;
 			}
+			line_number++;
 
 			if (read > 0 && line[read - 1] == '\n')
 				line[read - 1] = '\0';
 
-			execute_command(tokenize(line));
+			execute_command(tokenize(line), line_number);
 		}
 	}
 	else
@@ -65,7 +68,7 @@ int main(int argc, char **argv)
 		if (read > 0 && line[read - 1] == '\n')
 			line[read - 1] = '\0';
 
-		execute_command(tokenize(line));
+		execute_command(tokenize(line), line_number);
 		_write(prompt);
 	}
 

@@ -18,7 +18,7 @@
 
 /* Function Declarations */
 char **tokenize(char *input);
-void execute_command(char **tokens);
+void execute_command(char **tokens, int line_number);
 char *search_path(char **tokens);
 void execute_exit(char *argument);
 void execute_echo_path(void);
