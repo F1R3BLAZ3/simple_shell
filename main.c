@@ -30,49 +30,46 @@
 
 int main(int argc, char **argv)
 {
-	char *buf, *prompt = "hsh: $ ";
-	char **tokens;
-	size_t n = 0;
-	ssize_t val;
-	int interactive = isatty(fileno(stdin));
+	char *prompt = "hsh: $ ";
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read;
+
 	(void)argc;
 	(void)argv;
 
-	while (1)
+	if (isatty(STDIN_FILENO))
 	{
-		if (interactive)
+		while (1)
+		{
 			_write(prompt);
-		fflush(stdout);
-		val = getline(&buf, &n, stdin);
-		if (val == -1)
-		{
-			free(buf);
-			break;
-		}
-		buf[val - 1] = '\0';
-		tokens = tokenize(buf);
-		if (tokens[0] == NULL)
-		{
-			free(tokens);
-			free(buf);
-			continue;
-		}
 
-		if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
-			execute_echo_path();
-		else if (_strcmp(tokens[0], "exit") == 0)
-			execute_exit(tokens[1]);
-		/* else if (_strcmp(tokens[0], "setenv") == 0)
-			_setenv(tokens[1], tokens[2]);
-		 else if (_strcmp(tokens[0], "unsetenv") == 0)
-			_unsetenv(tokens[1]); */
-		else
-			execute_command(tokens);
-		free(tokens);
-		free(buf);
-		buf = NULL;
-		n = 0;
+			read = _getline(&line, &len, stdin);
+
+			if (read == -1)
+			{
+				_write("\n");
+				break;
+			}
+
+			if (read > 0 && line[read - 1] == '\n')
+				line[read - 1] = '\0';
+
+			execute_command(tokenize(line));
+		}
 	}
+	else
+	{
+		read = _getline(&line, &len, stdin);
+
+		if (read > 0 && line[read - 1] == '\n')
+			line[read - 1] = '\0';
+
+		execute_command(tokenize(line));
+		_write(prompt);
+	}
+
+	free(line);
 	return (0);
 }
 
@@ -98,14 +95,19 @@ char **tokenize(char *input)
 	i = 0;
 	if (!tokens)
 	{
-		perror("Memory allocation error");
+		perror(tokens[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	token = strtok(input, PATH_SEPARATOR);
+	token = _strtok(input, PATH_SEPARATOR);
 	while (token != NULL)
 	{
-		tokens[i] = token;
+		tokens[i] = strdup(token);
+		if (!tokens[i])
+		{
+			perror("Memory allocation error");
+			exit(EXIT_FAILURE);
+		}
 		i++;
 		token = _strtok(NULL, PATH_SEPARATOR);
 	}
