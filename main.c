@@ -118,6 +118,7 @@ char **tokenize(char *input)
 	if (!tokens)
 	{
 		perror("Memory allocation error");
+		free(tokens);
 		exit(EXIT_FAILURE);
 	}
 
