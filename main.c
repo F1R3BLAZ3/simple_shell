@@ -38,6 +38,8 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
+	buf = NULL;
+
 	if (!isatty(STDIN_FILENO))
 	{
 		while ((val = getline(&buf, &n, stdin)) != -1)
