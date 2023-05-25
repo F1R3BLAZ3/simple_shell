@@ -87,10 +87,6 @@ int main(int argc, char **argv)
 				free(buf);
 				return (0);
 			}
-<<<<<<< HEAD
-=======
-
->>>>>>> 9df6c45dc8533695b4c6d7123b208303f5fec770
 			else
 				execute_command(tokens, line_number, argv[0]);
 
