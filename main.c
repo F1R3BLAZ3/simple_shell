@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 				free(buf);
 				return (0);
 			}
-			
+
 			else
 				execute_command(tokens, line_number, argv[0]);
 
