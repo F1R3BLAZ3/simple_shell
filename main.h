@@ -47,5 +47,6 @@ void _append_env_variable(char **new_environ, char *new_env);
 size_t _get_environ_size(void);
 void _shift_env_pointers(char **env, size_t index);
 int _unsetenv(const char *name);
+void execute_env(void);
 
 #endif /* MAIN_H */
