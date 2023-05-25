@@ -20,11 +20,13 @@ void execute_command(char **tokens, int line_number, char *program_name)
 {
 	pid_t child_pid;
 	char *path = search_path(tokens);
-	int status;
+	int status, i;
 
 	if (path == NULL)
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+		free(path);
+		free(tokens);
 		exit(127);
 	}
 
@@ -32,6 +34,8 @@ void execute_command(char **tokens, int line_number, char *program_name)
 	if (child_pid == -1)
 	{
 		perror("Fork error");
+		free(path);
+		free(tokens);
 		exit(EXIT_FAILURE);
 	}
 
@@ -40,11 +44,15 @@ void execute_command(char **tokens, int line_number, char *program_name)
 		if (environ == NULL)
 		{
 			fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+			free(path);
+			free(tokens);
 			exit(127);
 		}
 		if (execve(path, tokens, environ) == -1)
 		{
 			perror("Execve error");
+			free(path);
+			free(tokens);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -53,6 +61,12 @@ void execute_command(char **tokens, int line_number, char *program_name)
 		waitpid(child_pid, &status, 0);
 	}
 	free(path);
+	for (i = 0; tokens[i] != NULL; i++)
+	{
+		free(tokens[i]);
+	}
+
+	free(tokens);
 }
 
 /**
@@ -85,11 +99,13 @@ char *search_path(char **tokens)
 {
 	char *dir, *token, *path = _getenv("PATH");
 	char *path_copy = _strdup(path);
+	char *result_path;
 
 	if (_strchr(tokens[0], '/'))
 	{
+		result_path = _strdup(tokens[0]);
 		free(path_copy);
-		return (_strdup(tokens[0]));
+		return result_path;
 	}
 
 	token = strtok(path_copy, PATH_SEPARATOR);
@@ -108,8 +124,8 @@ char *search_path(char **tokens)
 			free(path_copy);
 			return (dir);
 		}
-		token = strtok(NULL, PATH_SEPARATOR);
 		free(dir);
+		token = strtok(NULL, PATH_SEPARATOR);
 	}
 	free(path_copy);
 	return (NULL);
