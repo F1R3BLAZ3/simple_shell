@@ -40,7 +40,6 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 				position++;
 				*lineptr = line;
 				*n = lineSize;
-				free(line);
 				return (lineSize);
 			}
 			else

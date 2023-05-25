@@ -32,13 +32,22 @@ void execute_command(char **tokens, int line_number, char *program_name)
 	if (child_pid == 0)
 	{
 		if (execve(path, tokens, environ) == -1)
-			fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
-		exit(EXIT_FAILURE);
+			if (path == NULL)
+			{
+				fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+				exit(EXIT_FAILURE);
+			}
+		if (execve(path, tokens, environ) == -1)
+		{
+			perror("Execve error");
+			exit(EXIT_FAILURE);
+		}
 	}
 	else
 	{
 		waitpid(child_pid, &status, 0);
 	}
+	free(path);
 }
 
 /**
@@ -74,6 +83,7 @@ char *search_path(char **tokens)
 
 	if (_strchr(tokens[0], '/'))
 	{
+		free(path_copy);
 		return (_strdup(tokens[0]));
 	}
 
@@ -93,8 +103,8 @@ char *search_path(char **tokens)
 			free(path_copy);
 			return (dir);
 		}
-		free(dir);
 		token = _strtok(NULL, PATH_SEPARATOR);
+		free(dir);
 	}
 	free(path_copy);
 	return (NULL);
