@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 {
 	char *buf, *prompt = "hsh: $ ";
 	char **tokens;
+	int line_number = 1;
 	size_t n = 0;
 	ssize_t val;
 	(void)argc;
@@ -47,8 +48,9 @@ int main(int argc, char **argv)
 				free(tokens);
 				continue;
 			}
-			execute_command(tokens);
+			execute_command(tokens, line_number, argv[0]);
 			free(tokens);
+			line_number++;
 			_write(prompt);
 		}
 		free(buf);
@@ -66,6 +68,7 @@ int main(int argc, char **argv)
 			if (tokens[0] == NULL)
 			{
 				free(tokens);
+				line_number++;
 				continue;
 			}
 
@@ -83,9 +86,10 @@ int main(int argc, char **argv)
 			else if (_strcmp(tokens[0], "unsetenv") == 0)
 				_unsetenv(tokens[1]);
 			else
-				execute_command(tokens);
+				execute_command(tokens, line_number, argv[0]);
 
 			free(tokens);
+			line_number++;
 		}
 		free(buf);
 	}

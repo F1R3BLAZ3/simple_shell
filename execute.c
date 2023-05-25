@@ -4,50 +4,40 @@
 #include "main.h"
 
 /**
- * execute_command - Execute a command in a new process
- * @tokens: A pointer to an array of strings (tokens)
- * representing the command and its arguments
+ * execute_command - Execute a command
+ * @tokens: Array of strings representing the command and its arguments
+ * @program_name: Name of the program
  *
- * Description: This function receives an array of strings representing
- * a command and its arguments, checks if the command exists,
- * and executes it in a new process using the execv system call.
- * If the command does not exist, the function prints an error message and
- * returns. If there is an error in forking a new process or executing the
- * command, the function prints an error message and exits.
- * The function waits for the child process to complete before returning.
- *
- * Return: This function does not return a value.
+ * Description: This function executes a command by forking a child process,
+ * using the execve system call to execute the command, and waiting for the
+ * child process to finish. The function checks if the command exists in the
+ * PATH directories, and if not, it prints an error message using the
+ * print_error function. If the command exists, the function uses execve to
+ * execute the command with the given arguments. The function also handles
+ * errors that may occur during forking and executing the command.
  */
-
-void execute_command(char **tokens)
+void execute_command(char **tokens, int line_number, char *program_name)
 {
-	pid_t pid;
+	pid_t child_pid;
 	char *path = search_path(tokens);
 	int status;
 
-	if (path == NULL)
+	child_pid = fork();
+	if (child_pid == -1)
 	{
-		_write("Command not found\n");
-		return;
-	}
-
-	pid = fork();
-
-	if (pid == -1)
-	{
-		perror("Error");
+		perror("Fork error");
 		exit(EXIT_FAILURE);
 	}
-	else if (pid == 0)
+
+	if (child_pid == 0)
 	{
-		execve(path, tokens, environ);
-		perror("execve");
+		if (execve(path, tokens, environ) == -1)
+			fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
-		waitpid(pid, &status, 0);
-		free(path);
+		waitpid(child_pid, &status, 0);
 	}
 }
 
