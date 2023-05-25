@@ -1,6 +1,7 @@
 #define PATH_SEPARATOR " \t\r\n"
 
 #include "main.h"
+#include "leak_detector_c.h"
 
 /**
  * main - Simple shell program
@@ -51,6 +52,7 @@ int main(int argc, char **argv)
 			execute_command(tokens, line_number, argv[0]);
 			free(tokens);
 			line_number++;
+			_write(prompt);
 		}
 		free(buf);
 	}
