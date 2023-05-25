@@ -88,7 +88,6 @@ int main(int argc, char **argv)
 				execute_command(tokens, line_number, argv[0]);
 
 			free(tokens);
-			line_number++;
 		}
 		free(buf);
 	}
