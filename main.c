@@ -45,9 +45,8 @@ int main(int argc, char **argv)
 		while ((val = getline(&buf, &n, stdin)) != -1)
 		{
 			tokens = tokenize(buf);
-			if (tokens[0] == NULL)
+			if (tokens == NULL)
 			{
-				free(tokens);
 				continue;
 			}
 			execute_command(tokens, line_number, argv[0]);
@@ -68,7 +67,6 @@ int main(int argc, char **argv)
 			tokens = tokenize(buf);
 			if (tokens[0] == NULL)
 			{
-				free(tokens);
 				continue;
 			}
 
