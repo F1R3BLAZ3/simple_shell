@@ -68,12 +68,15 @@ int main(int argc, char **argv)
 			if (tokens[0] == NULL)
 			{
 				free(tokens);
-				line_number++;
 				continue;
 			}
 
+			line_number++;
 			if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
+			{
 				execute_echo_path();
+				free(tokens);
+			}
 			else if (_strcmp(tokens[0], "exit") == 0)
 			{
 				execute_exit(tokens[1]);

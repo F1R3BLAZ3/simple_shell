@@ -39,6 +39,7 @@ void execute_command(char **tokens, int line_number, char *program_name)
 	{
 		waitpid(child_pid, &status, 0);
 	}
+	free(path);
 }
 
 /**
