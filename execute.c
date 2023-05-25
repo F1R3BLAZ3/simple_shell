@@ -87,7 +87,7 @@ char *search_path(char **tokens)
 		return (_strdup(tokens[0]));
 	}
 
-	token = _strtok(path_copy, PATH_SEPARATOR);
+	token = strtok(path_copy, PATH_SEPARATOR);
 	while (token != NULL)
 	{
 		dir = malloc(_strlen(token) + _strlen(tokens[0]) + 2);
@@ -103,7 +103,7 @@ char *search_path(char **tokens)
 			free(path_copy);
 			return (dir);
 		}
-		token = _strtok(NULL, PATH_SEPARATOR);
+		token = strtok(NULL, PATH_SEPARATOR);
 		free(dir);
 	}
 	free(path_copy);

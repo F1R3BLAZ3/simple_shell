@@ -125,12 +125,12 @@ char **tokenize(char *input)
 		exit(EXIT_FAILURE);
 	}
 
-	token = _strtok(input, PATH_SEPARATOR);
+	token = strtok(input, PATH_SEPARATOR);
 	while (token != NULL)
 	{
 		tokens[i] = token;
 		i++;
-		token = _strtok(NULL, PATH_SEPARATOR);
+		token = strtok(NULL, PATH_SEPARATOR);
 	}
 
 	tokens[i] = NULL;
