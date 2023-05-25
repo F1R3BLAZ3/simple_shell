@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
 	if (!isatty(STDIN_FILENO))
 	{
-		while ((val = _getline(&buf, &n, stdin)) != -1)
+		while ((val = getline(&buf, &n, stdin)) != -1)
 		{
 			tokens = tokenize(buf);
 			if (tokens[0] == NULL)
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 		{
 			_write(prompt);
 			fflush(stdout);
-			val = _getline(&buf, &n, stdin);
+			val = getline(&buf, &n, stdin);
 			if (val == -1)
 				return (-1);
 			tokens = tokenize(buf);
@@ -121,6 +121,7 @@ char **tokenize(char *input)
 	if (!tokens)
 	{
 		perror("Memory allocation error");
+		free(tokens);
 		exit(EXIT_FAILURE);
 	}
 
@@ -133,5 +134,10 @@ char **tokenize(char *input)
 	}
 
 	tokens[i] = NULL;
+	if (i == 0)
+	{
+		free(tokens);
+		tokens = NULL;
+	}
 	return (tokens);
 }
