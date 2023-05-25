@@ -27,6 +27,7 @@ void execute_command(char **tokens, int line_number, char *program_name)
 		fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
 		exit(127);
 	}
+
 	child_pid = fork();
 	if (child_pid == -1)
 	{
@@ -36,6 +37,11 @@ void execute_command(char **tokens, int line_number, char *program_name)
 
 	if (child_pid == 0)
 	{
+		if (environ == NULL)
+		{
+			fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+			exit(127);
+		}
 		if (execve(path, tokens, environ) == -1)
 		{
 			perror("Execve error");
