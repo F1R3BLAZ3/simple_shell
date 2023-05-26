@@ -25,6 +25,8 @@ void execute_command(char **tokens, int line_number, char *program_name)
 	if (path == NULL)
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+		free_tokens(tokens);
+		free(path);
 		exit(127);
 	}
 
@@ -32,6 +34,8 @@ void execute_command(char **tokens, int line_number, char *program_name)
 	if (child_pid == -1)
 	{
 		perror("Fork error");
+		free_tokens(tokens);
+		free(path);
 		exit(EXIT_FAILURE);
 	}
 
@@ -40,11 +44,15 @@ void execute_command(char **tokens, int line_number, char *program_name)
 		if (environ == NULL)
 		{
 			fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+			free_tokens(tokens);
+			free(path);
 			exit(127);
 		}
 		if (execve(path, tokens, environ) == -1)
 		{
 			perror("Execve error");
+			free_tokens(tokens);
+			free(path);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -113,4 +121,15 @@ char *search_path(char **tokens)
 	}
 	free(path_copy);
 	return (NULL);
+}
+
+void free_tokens(char **tokens)
+{
+    int i = 0;
+    while (tokens[i] != NULL)
+    {
+        free(tokens[i]);
+        i++;
+    }
+    free(tokens);
 }

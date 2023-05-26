@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 				continue;
 			}
 			execute_command(tokens, line_number, argv[0]);
-			free(tokens);
+			free_tokens(tokens);
 			line_number++;
 		}
 		free(buf);
@@ -74,27 +74,29 @@ int main(int argc, char **argv)
 			if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
 			{
 				execute_echo_path();
-				free(tokens);
+				free_tokens(tokens);
 			}
 			else if (_strcmp(tokens[0], "env") == 0)
 			{
 				execute_env();
+				free_tokens(tokens);
 			}
 			else if (_strcmp(tokens[0], "exit") == 0)
 			{
 				execute_exit(tokens[1]);
-				free(tokens);
+				free_tokens(tokens);
 				free(buf);
 				return (0);
 			}
 			else
 				execute_command(tokens, line_number, argv[0]);
 
-			free(tokens);
+			free_tokens(tokens);
 		}
 		free(buf);
 	}
 
+	free(buf);
 	return (0);
 }
 
