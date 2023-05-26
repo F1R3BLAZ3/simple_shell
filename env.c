@@ -7,7 +7,7 @@
  *
  * Description: This function checks if the input for the setenv function is
  * valid. It verifies that the name is not NULL, not an empty string,
- * does not * contain the '=' character, and the value is not NULL.
+ * does not contain the '=' character, and the value is not NULL.
  * If any of these conditions are not met,
  * an error message is printed and -1 is returned.
  *
@@ -28,6 +28,7 @@ int _validate_setenv_input(const char *name, const char *value)
  * _setenv - Set the value of an environment variable.
  * @name: The name of the environment variable.
  * @value: The value to be assigned to the environment variable.
+ *
  * Description: This function sets the value of the specified environment
  * variable. It first validates the input parameters using the
  * _validate_setenv_input function. If the input is valid, it calculates the
