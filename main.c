@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 			}
 			else if (_strcmp(tokens[0], "exit") == 0)
 			{
-				status = execute_exit(tokens[1]);
+				status = execute_exit(tokens[1], line_number, argv[0]);
 				free(tokens);
 				free(buf);
 				exit(status);
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 			}
 			else if (_strcmp(tokens[0], "exit") == 0)
 			{
-				execute_exit(tokens[1]);
+				execute_exit(tokens[1], line_number, argv[0]);
 				free(tokens);
 				free(buf);
 				return (0);

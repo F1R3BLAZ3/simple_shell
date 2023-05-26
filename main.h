@@ -14,12 +14,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <ctype.h>
 
 /* Function Declarations */
 char **tokenize(char *input);
 void execute_command(char **tokens, int line_number, char *program_name);
 char *search_path(char **tokens);
-int execute_exit(char *argument);
+int execute_exit(char *argument, int line_number, char *program_name);
 void execute_echo_path(void);
 ssize_t _write(const char *str);
 int _strcmp(const char *s1, const char *s2);
