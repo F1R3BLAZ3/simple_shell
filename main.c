@@ -74,7 +74,6 @@ int main(int argc, char **argv)
 			if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
 			{
 				execute_echo_path();
-				free(tokens);
 			}
 			else if (_strcmp(tokens[0], "env") == 0)
 			{
