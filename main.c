@@ -18,11 +18,11 @@ int status = 0;
  * token is 'exit', it calls the execute_exit function with the second token
  * as the argument. If the first token is 'setenv', it calls the _setenv
  * function. If the first token is 'unsetenv', it calls the _unsetenv function.
- * Otherwise, it calls the execute_command function. The function returns 1
- * if the command execution is successful, and 0 if the command is 'exit',
- * indicating that the shell should exit.
+ * Otherwise, it calls the execute_command function to execute a generic
+ * command. The function returns 1 if the command execution is successful,
+ * and 0 if the command is 'exit', indicating that the shell should exit.
  *
- * Return : 1 for success.
+ * Return: 1 for successful command execution, 0 for 'exit' command.
  */
 
 int execute_shell_command(char **tokens, int line_number, char *program_name)
