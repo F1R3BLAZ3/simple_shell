@@ -67,6 +67,10 @@ int main(int argc, char **argv)
 				free(buf);
 				exit(status);
 			}
+			else if (_strcmp(tokens[0], "setenv") == 0)
+				_setenv(tokens[1], tokens[2]);
+			else if (_strcmp(tokens[0], "unsetenv") == 0)
+				_unsetenv(tokens[1]);
 			else
 				execute_command(tokens, line_number, argv[0]);
 			free(tokens);
@@ -105,6 +109,10 @@ int main(int argc, char **argv)
 				free(buf);
 				return (0);
 			}
+			else if (_strcmp(tokens[0], "setenv") == 0)
+				_setenv(tokens[1], tokens[2]);
+			else if (_strcmp(tokens[0], "unsetenv") == 0)
+				_unsetenv(tokens[1]);
 			else
 				execute_command(tokens, line_number, argv[0]);
 
