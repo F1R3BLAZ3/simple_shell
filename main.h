@@ -49,6 +49,8 @@ size_t _get_environ_size(void);
 void _shift_env_pointers(char **env, size_t index);
 int _unsetenv(const char *name);
 void execute_env(void);
+void interactive_mode(char *prompt, char *program_name);
+void noninteractive_mode(char *program_name);
 
 
 #endif /* MAIN_H */
