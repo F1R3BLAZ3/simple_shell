@@ -32,16 +32,21 @@ int execute_exit(char *argument, int line_number, char *program_name)
 {
 	int status = 0;
 
+	if (argument == NULL)
+	{
+		/* No argument provided */
+		return (status);
+	}
 	if (isdigit(argument[0]))
-        {
-            /* Argument is an integer */
-            status = atoi(argument);
-        }
-        else
-        {
-            /* Argument is a string */
-	    fprintf(stderr, "%s: %d: exit: Illegal number: %s\n", program_name, line_number, argument);
-            status = 2;
-        }
+	{
+		/* Argument is an integer */
+		status = atoi(argument);
+	}
+	else
+	{
+		/* Argument is a string */
+		fprintf(stderr, "%s: %d: exit: Illegal number: %s\n", program_name, line_number, argument);
+		status = 2;
+	}
 	return (status);
 }
