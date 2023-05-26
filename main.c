@@ -19,14 +19,16 @@ int status = 0;
  * using the tokenize function. If the first token is NULL, indicating an empty
  * command, the function frees the tokens array and continues to the next
  * iteration of the loop. If the first token is 'echo $PATH', the function
- * calls the execute_echo_path function. If the first token is 'setenv', the
- * function calls the setenv_command function. If the first token is
- * 'unsetenv', the function calls the unsetenv_command function. If the first
- * token is 'exit', the function calls the execute_exit function with the
- * second token as the argument. Otherwise, the function calls the
- * execute_command function. After executing the command, the function frees
- * the tokens array and repeats the loop. The function also frees the input
- * buffer before exiting.
+ * calls the execute_echo_path function. If the first token is 'env', the
+ * function calls the execute_env function. If the first token is 'exit', the
+ * function calls the execute_exit function with the second token as the
+ * argument, frees the tokens and input buffer, and exits the program. If the
+ * first token is 'setenv', the function calls the _setenv function with the
+ * appropriate arguments. If the first token is 'unsetenv', the function calls
+ * the _unsetenv function with the appropriate argument. If none of the above
+ * conditions are met, the function calls the execute_command function. After
+ * executing the command, the function frees the tokens array and repeats the
+ * loop. The function also frees the input buffer before exiting.
  *
  * Return: This function returns 0 if the program exits successfully.
  */

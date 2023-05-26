@@ -6,13 +6,14 @@
 /**
  * execute_command - Execute a command
  * @tokens: Array of strings representing the command and its arguments
+ * @line_number: Line number of the command in the input
  * @program_name: Name of the program
  *
  * Description: This function executes a command by forking a child process,
- * using the execve system call to execute the command, and waiting for the
+ * using the `execve` system call to execute the command, and waiting for the
  * child process to finish. The function checks if the command exists in the
  * PATH directories, and if not, it prints an error message using the
- * print_error function. If the command exists, the function uses execve to
+ * `fprintf` function. If the command exists, the function uses `execve` to
  * execute the command with the given arguments. The function also handles
  * errors that may occur during forking and executing the command.
  */
@@ -24,7 +25,8 @@ void execute_command(char **tokens, int line_number, char *program_name)
 
 	if (path == NULL)
 	{
-		fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+		fprintf(stderr, "%s: %d: %s: not found\n",
+			program_name, line_number, tokens[0]);
 		exit(127);
 	}
 
@@ -39,7 +41,8 @@ void execute_command(char **tokens, int line_number, char *program_name)
 	{
 		if (environ == NULL)
 		{
-			fprintf(stderr, "%s: %d: %s: not found\n", program_name, line_number, tokens[0]);
+			fprintf(stderr, "%s: %d: %s: not found\n",
+				program_name, line_number, tokens[0]);
 			exit(127);
 		}
 		if (execve(path, tokens, environ) == -1)

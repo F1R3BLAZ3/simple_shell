@@ -7,9 +7,9 @@
  * Description: This function retrieves the value of the environment variable
  * specified by name. It searches through the environment variable array
  * environ to find a match. The function compares the first l characters of
- * each environment variable name with name using _strncmp function,
+ * each environment variable name with name using the _strncmp function,
  * where l is the length of name. If a match is found, a pointer to the
- * corresponding environment variable is returned. If no match is found,
+ * corresponding environment variable value is returned. If no match is found,
  * NULL is returned.
  *
  * Return: A pointer to the value of the environment variable,

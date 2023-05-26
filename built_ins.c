@@ -21,12 +21,19 @@ void execute_echo_path(void)
 /**
  * execute_exit - Execute the 'exit' command
  * @argument: The argument provided to the 'exit' command
+ * @line_number: The line number where the 'exit' command was encountered
+ * @program_name: The name of the program
  *
  * Description: This function prints a goodbye message to the standard output,
  * indicating the termination of the shell program. It then exits the program
- * with a status code of 0, indicating successful termination.
+ * with a status code based on the provided argument. If no argument is
+ * provided, the status code is 0, indicating successful termination. If the
+ * argument is a valid integer, it is converted to an integer and used as the
+ * status code. If the argument is not a valid integer, an error message is
+ * printed to the standard error, and the status code is set to 2. The function
+ * returns the status code.
  *
- * Return: This function does not return a value.
+ * Return: The status code for the program.
  */
 int execute_exit(char *argument, int line_number, char *program_name)
 {
@@ -45,7 +52,8 @@ int execute_exit(char *argument, int line_number, char *program_name)
 	else
 	{
 		/* Argument is a string */
-		fprintf(stderr, "%s: %d: exit: Illegal number: %s\n", program_name, line_number, argument);
+		fprintf(stderr, "%s: %d: exit: Illegal number: %s\n",
+			 program_name, line_number, argument);
 		status = 2;
 	}
 	return (status);
