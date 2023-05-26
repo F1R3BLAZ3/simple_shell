@@ -5,7 +5,33 @@
 /* Global Variables */
 int status = 0;
 
-
+/**
+ * noninteractive_mode - Execute shell commands in non-interactive mode
+ * @program_name: Name of the shell program
+ *
+ * Description: This function reads shell commands from stdin in
+ * non-interactive mode and executes them accordingly. It uses the getline
+ * function to read input from stdin and tokenizes each line of input using the
+ * tokenize function.
+ * It then checks the first token to determine the appropriate action:
+ *   - If the first token is 'echo $PATH', it calls the execute_echo_path
+ *     function.
+ *   - If the first token is 'env', it calls the execute_env function.
+ *   - If the first token is 'exit', it calls the execute_exit function with
+ *     the second token as the argument. If no argument is provided, the status
+ *     code is set to 0 indicating successful termination.
+ *   - If the first token is 'setenv', it calls the _setenv function with the
+ *     corresponding arguments.
+ *   - If the first token is 'unsetenv', it calls the _unsetenv function with
+ *     the corresponding argument.
+ *   - For any other command, it calls the execute_command function to execute
+ *     a generic command.
+ * The function continues reading and executing commands until the end of input
+ * is reached. It frees the memory allocated for tokens and the input buffer
+ * before returning.
+ *
+ * Return: This function does not return a value.
+ */
 void noninteractive_mode(char *program_name)
 {
 	char *buf = NULL;
@@ -44,6 +70,35 @@ void noninteractive_mode(char *program_name)
 	free(buf);
 }
 
+/**
+ * interactive_mode - Execute shell commands in interactive mode
+ * @prompt: The prompt to be displayed for user input
+ * @program_name: Name of the shell program
+ *
+ * Description: This function runs the shell program in interactive mode,
+ * where it prompts the user for input and executes the corresponding shell
+ * commands. It displays the specified prompt before each user input. The
+ * function uses the getline function to read input from stdin and tokenizes
+ * each line of input using the tokenize function. It then checks the first
+ * token to determine the appropriate action:
+ *   - If the first token is 'echo $PATH', it calls the execute_echo_path
+ *     function.
+ *   - If the first token is 'env', it calls the execute_env function.
+ *   - If the first token is 'exit', it calls the execute_exit function with
+ *     the second token as the argument. The function breaks out of the loop
+ *     and terminates the shell program.
+ *   - If the first token is 'setenv', it calls the _setenv function with the
+ *     corresponding arguments.
+ *   - If the first token is 'unsetenv', it calls the _unsetenv function with
+ *     the corresponding argument.
+ *   - For any other command, it calls the execute_command function to execute
+ *     a generic command.
+ * The function continues prompting for input and executing commands until the
+ * user terminates the program by entering the 'exit' command. It frees the
+ * memory allocated for tokens and the input buffer before returning.
+ *
+ * Return: This function does not return a value.
+ */
 void interactive_mode(char *prompt, char *program_name)
 {
 	char *buf = NULL;
@@ -87,6 +142,22 @@ void interactive_mode(char *prompt, char *program_name)
 	free(buf);
 }
 
+/**
+ * main - Entry point of the shell program
+ * @argc: Number of command-line arguments
+ * @argv: Array of command-line arguments
+ *
+ * Description: This function is the entry point of the shell program.
+ * It checks if the program is running in interactive mode or non-interactive
+ * mode based on whether stdin is associated with a terminal. If stdin is not a
+ * terminal, the program runs in non-interactive mode by calling the
+ * noninteractive_mode function with the program name. If stdin is a terminal,
+ * the program runs in interactive mode by calling the interactive_mode
+ * function with the specified prompt and program name.
+ * The function returns 0 upon successful completion.
+ *
+ * Return: 0 upon successful completion.
+ */
 int main(int argc, char **argv)
 {
 	char *prompt = "hsh: $ ";
@@ -101,7 +172,7 @@ int main(int argc, char **argv)
 		interactive_mode(prompt, argv[0]);
 	}
 
-	return 0;
+	return (0);
 }
 
 /**
