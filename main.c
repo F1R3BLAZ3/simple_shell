@@ -49,7 +49,23 @@ int main(int argc, char **argv)
 			{
 				continue;
 			}
-			execute_command(tokens, line_number, argv[0]);
+			if (_strcmp(tokens[0], "echo") == 0 && _strcmp(tokens[1], "$PATH") == 0)
+			{
+				execute_echo_path();
+			}
+			else if (_strcmp(tokens[0], "env") == 0)
+			{
+				execute_env();
+			}
+			else if (_strcmp(tokens[0], "exit") == 0)
+			{
+				execute_exit(tokens[1]);
+				free(tokens);
+				free(buf);
+				return (0);
+			}
+			else
+				execute_command(tokens, line_number, argv[0]);
 			free(tokens);
 			line_number++;
 		}
