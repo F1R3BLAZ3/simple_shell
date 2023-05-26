@@ -19,7 +19,7 @@
 char **tokenize(char *input);
 void execute_command(char **tokens, int line_number, char *program_name);
 char *search_path(char **tokens);
-void execute_exit(char *argument);
+int execute_exit(char *argument);
 void execute_echo_path(void);
 ssize_t _write(const char *str);
 int _strcmp(const char *s1, const char *s2);
@@ -48,5 +48,6 @@ size_t _get_environ_size(void);
 void _shift_env_pointers(char **env, size_t index);
 int _unsetenv(const char *name);
 void execute_env(void);
+
 
 #endif /* MAIN_H */

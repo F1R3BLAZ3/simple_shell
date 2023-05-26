@@ -2,6 +2,9 @@
 
 #include "main.h"
 
+/* Global Variables */
+int status = 0;
+
 /**
  * main - Simple shell program
  * @argc: Number of arguments passed to the program
@@ -59,10 +62,10 @@ int main(int argc, char **argv)
 			}
 			else if (_strcmp(tokens[0], "exit") == 0)
 			{
-				execute_exit(tokens[1]);
+				status = execute_exit(tokens[1]);
 				free(tokens);
 				free(buf);
-				return (0);
+				exit(status);
 			}
 			else
 				execute_command(tokens, line_number, argv[0]);
